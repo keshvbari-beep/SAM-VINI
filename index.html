@@ -1,0 +1,8670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#09070a">
+<title>SAM VINI — A Story in Motion</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+  transition:background .7s,color .7s
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+:root{
+ --bg:#09070a;
+ --bg2:#120c11;
+ --surface:#171016;
+ --card:rgba(255,255,255,.055);
+ --line:rgba(255,255,255,.12);
+ --text:#f8f2f5;
+ --muted:#b8aeb5;
+ --accent:#e7a6bd;
+ --accent2:#b96c8b;
+ --gold:#d8bd8a;
+ --glow:rgba(231,166,189,.30);
+ --font-display:Georgia,serif;
+ --font-body:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ --radius:22px;
+ --anim:1;
+}
+
+/* =========================================================
+   LIGHT MODE
+========================================================= */
+
+body.light{
+ --text:#21171d;
+ --muted:#655962;
+ --line:rgba(30,20,25,.14);
+ --card:rgba(255,255,255,.52);
+}
+
+/* =========================================================
+   FESTIVAL THEMES
+========================================================= */
+
+body.theme-newyear{
+ --accent:#d8bd8a;--accent2:#fff1bd;
+ --glow:rgba(216,189,138,.35)
+}
+body.theme-valentine{
+ --accent:#ff7da8;--accent2:#c52e69;
+ --glow:rgba(255,80,140,.35)
+}
+body.theme-holi{
+ --accent:#ff75b5;--accent2:#69d9ff;
+ --glow:rgba(255,110,180,.35)
+}
+body.theme-earth{
+ --accent:#8fcf9b;--accent2:#3d8f68;
+ --glow:rgba(100,190,130,.30)
+}
+body.theme-summer{
+ --accent:#ffbf68;--accent2:#ff7c58;
+ --glow:rgba(255,170,80,.35)
+}
+body.theme-monsoon{
+ --accent:#73b9dc;--accent2:#4878a4;
+ --glow:rgba(70,150,210,.35)
+}
+body.theme-independence{
+ --accent:#ffad68;--accent2:#78b77d;
+ --glow:rgba(255,170,90,.30)
+}
+body.theme-republic{
+ --accent:#efad67;--accent2:#6e9fd4;
+ --glow:rgba(240,170,80,.30)
+}
+body.theme-halloween{
+ --accent:#ff9a45;--accent2:#8f52bc;
+ --glow:rgba(255,120,40,.35)
+}
+body.theme-christmas{
+ --accent:#e96d78;--accent2:#83bd91;
+ --glow:rgba(220,80,90,.32)
+}
+body.theme-eve{
+ --accent:#a78cff;--accent2:#e7a6bd;
+ --glow:rgba(150,120,255,.35)
+}
+body.theme-love{
+ --accent:#f09bb8;--accent2:#9c5579;
+ --glow:rgba(240,130,175,.35)
+}
+body.theme-midnight{
+ --accent:#829eff;--accent2:#6970c8;
+ --glow:rgba(100,130,255,.35)
+}
+body.theme-springlove{
+ --accent:#e89eb7;--accent2:#8ec99c;
+ --glow:rgba(230,150,190,.30)
+}
+
+/* =========================================================
+   GRAIN
+========================================================= */
+
+#grain{
+ position:fixed;
+ inset:0;
+ pointer-events:none;
+ z-index:9998;
+ opacity:.035;
+ background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E")
+}
+
+/* =========================================================
+   SEASON EFFECTS
+========================================================= */
+
+#effects{
+ position:fixed;
+ inset:0;
+ pointer-events:none;
+ overflow:hidden;
+ z-index:9990
+}
+
+.effect{
+ position:absolute;
+ top:-50px;
+ pointer-events:none;
+ animation:fall linear infinite;
+ opacity:.7
+}
+
+@keyframes fall{
+ to{transform:translate3d(var(--drift),110vh,var(--rot))}
+}
+
+.rain{
+ width:1px;
+ height:18px;
+ background:linear-gradient(transparent,var(--accent));
+ animation-name:rain
+}
+
+@keyframes rain{
+ to{transform:translate3d(-90px,110vh,0)}
+}
+
+.snow{
+ width:8px;
+ height:8px;
+ border-radius:50%;
+ background:#fff;
+ box-shadow:0 0 10px #fff;
+ animation-name:snow
+}
+
+.petal{
+ width:9px;
+ height:13px;
+ border-radius:80% 20% 80% 20%;
+ background:var(--accent);
+ animation-name:petal
+}
+
+.leaf{
+ width:9px;
+ height:15px;
+ border-radius:80% 10% 80% 10%;
+ background:var(--accent2);
+ animation-name:petal
+}
+
+@keyframes snow{
+ to{transform:translate3d(var(--drift),110vh,0) rotate(500deg)}
+}
+
+@keyframes petal{
+ to{transform:translate3d(var(--drift),110vh,0) rotate(700deg)}
+}
+
+.cloud{
+ position:absolute;
+ width:180px;
+ height:55px;
+ border-radius:50px;
+ background:rgba(120,145,170,.08);
+ filter:blur(3px);
+ animation:cloudMove 28s linear infinite
+}
+
+@keyframes cloudMove{
+ from{transform:translateX(-250px)}
+ to{transform:translateX(110vw)}
+}
+
+.heat{
+ position:absolute;
+ width:180px;
+ height:180px;
+ border-radius:50%;
+ background:radial-gradient(circle,rgba(255,180,80,.15),transparent 70%);
+ filter:blur(10px);
+ animation:heatMove 7s ease-in-out infinite alternate
+}
+
+@keyframes heatMove{
+ from{transform:translateY(20px) scale(.9)}
+ to{transform:translateY(-20px) scale(1.1)}
+}
+
+/* =========================================================
+   LOADER
+========================================================= */
+
+#loader{
+ position:fixed;
+ inset:0;
+ z-index:12000;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:var(--bg);
+ transition:opacity .9s ease,visibility .9s ease;
+ overflow:hidden
+}
+
+#loader.hide{
+ opacity:0;
+ visibility:hidden;
+ pointer-events:none
+}
+
+.loader-inner{
+ position:relative;
+ z-index:2;
+ width:min(500px,90%);
+ text-align:center
+}
+
+.loader-mark{
+ font-size:9px;
+ letter-spacing:6px;
+ color:var(--accent);
+ margin-bottom:20px;
+ opacity:0;
+ animation:loaderFade 1s .1s ease forwards
+}
+
+.loader-logo{
+ font-family:var(--font-display);
+ font-size:clamp(38px,9vw,72px);
+ letter-spacing:.14em;
+ font-weight:400;
+ opacity:0;
+ transform:translateY(18px) scale(.97);
+ animation:loaderLogo 1.2s .25s cubic-bezier(.2,.7,.2,1) forwards
+}
+
+.loader-logo span{
+ color:var(--accent)
+}
+
+.loader-line{
+ width:min(220px,65%);
+ height:1px;
+ background:var(--line);
+ margin:25px auto 0;
+ overflow:hidden;
+ position:relative
+}
+
+.loader-line:after{
+ content:"";
+ position:absolute;
+ left:0;
+ top:0;
+ width:45%;
+ height:100%;
+ background:var(--accent);
+ box-shadow:0 0 15px var(--accent);
+ animation:loaderLine 1.5s infinite
+}
+
+.loader-status{
+ margin-top:13px;
+ color:var(--muted);
+ font-size:8px;
+ letter-spacing:3px;
+ opacity:0;
+ animation:loaderFade 1s .8s ease forwards
+}
+
+.loader-glow{
+ position:absolute;
+ width:400px;
+ height:400px;
+ border-radius:50%;
+ background:radial-gradient(circle,var(--glow),transparent 70%);
+ filter:blur(30px);
+ opacity:.4;
+ animation:loaderGlow 4s ease-in-out infinite alternate
+}
+
+@keyframes loaderFade{
+ to{opacity:1}
+}
+
+@keyframes loaderLogo{
+ to{
+  opacity:1;
+  transform:none
+ }
+}
+
+@keyframes loaderLine{
+ from{transform:translateX(-130%)}
+ to{transform:translateX(320%)}
+}
+
+@keyframes loaderGlow{
+ from{transform:scale(.8);opacity:.25}
+ to{transform:scale(1.15);opacity:.5}
+}
+
+/* =========================================================
+   AGE GATE
+========================================================= */
+
+#ageGate{
+ position:fixed;
+ inset:0;
+ z-index:10000;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ overflow:hidden;
+ padding:20px;
+ background:var(--bg)
+}
+
+.age-photo{
+ position:absolute;
+ inset:-8%;
+ background-image:url("https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1800&q=75");
+ background-size:cover;
+ background-position:center;
+ opacity:.72;
+ filter:blur(1px) saturate(.88);
+ transform:scale(1.08);
+ animation:ageZoom 12s ease-in-out infinite alternate;
+ -webkit-mask-image:radial-gradient(
+  ellipse 72% 72% at 50% 48%,
+  #000 18%,
+  rgba(0,0,0,.86) 50%,
+  rgba(0,0,0,.35) 75%,
+  transparent 100%
+ );
+ mask-image:radial-gradient(
+  ellipse 72% 72% at 50% 48%,
+  #000 18%,
+  rgba(0,0,0,.86) 50%,
+  rgba(0,0,0,.35) 75%,
+  transparent 100%
+ )
+}
+
+@keyframes ageZoom{
+ from{transform:scale(1.08) translate3d(0,0,0)}
+ to{transform:scale(1.17) translate3d(-1%,1%,0)}
+}
+
+.age-overlay{
+ position:absolute;
+ inset:0;
+ background:
+ radial-gradient(circle at center,transparent 0%,rgba(9,7,10,.20) 45%,var(--bg) 100%),
+ linear-gradient(to bottom,rgba(9,7,10,.20),var(--bg))
+}
+
+.age-content{
+ position:relative;
+ z-index:2;
+ width:min(600px,92%);
+ text-align:center;
+ animation:ageContent 1.3s ease both
+}
+
+@keyframes ageContent{
+ from{
+  opacity:0;
+  transform:translateY(25px) scale(.98)
+ }
+ to{
+  opacity:1;
+  transform:none
+ }
+}
+
+.age-mark{
+ font-size:10px;
+ letter-spacing:5px;
+ color:var(--accent);
+ margin-bottom:24px
+}
+
+.age-content h1{
+ font-family:var(--font-display);
+ font-size:clamp(65px,14vw,120px);
+ font-weight:400;
+ line-height:.8;
+ letter-spacing:-.08em
+}
+
+.age-content p{
+ color:var(--muted);
+ line-height:1.7;
+ margin:22px auto 28px;
+ max-width:450px;
+ font-size:13px
+}
+
+.age-actions{
+ display:flex;
+ gap:10px;
+ justify-content:center;
+ flex-wrap:wrap
+}
+
+.age-note{
+ margin-top:18px!important;
+ font-size:10px!important;
+ color:#887d84!important
+}
+
+/* PETALS */
+
+.petals{
+ position:absolute;
+ inset:0;
+ overflow:hidden;
+ pointer-events:none;
+ z-index:1
+}
+
+.age-petal{
+ position:absolute;
+ width:6px;
+ height:10px;
+ border-radius:100% 0 100% 0;
+ background:var(--accent);
+ opacity:.15;
+ animation:agePetalFall linear infinite
+}
+
+@keyframes agePetalFall{
+ from{
+  transform:translateY(-20vh) rotate(0)
+ }
+ to{
+  transform:translateY(120vh) translateX(100px) rotate(500deg)
+ }
+}
+
+/* =========================================================
+   BASIC
+========================================================= */
+
+.container{
+ width:min(1160px,92%);
+ margin:auto
+}
+
+.section{
+ padding:110px 0;
+ position:relative
+}
+
+.eyebrow{
+ color:var(--accent);
+ font-size:11px;
+ letter-spacing:4px;
+ font-weight:700;
+ margin-bottom:18px
+}
+
+.section-title{
+ font-family:var(--font-display);
+ font-size:clamp(42px,7vw,78px);
+ line-height:.95;
+ font-weight:400;
+ margin-bottom:45px
+}
+
+.section-title span{color:var(--accent)}
+.muted{color:var(--muted)}
+
+.btn{
+ border:1px solid var(--line);
+ background:rgba(255,255,255,.045);
+ color:var(--text);
+ padding:13px 20px;
+ border-radius:999px;
+ transition:.3s;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ gap:8px
+}
+
+.btn:hover{
+ transform:translateY(-2px);
+ border-color:var(--accent);
+ box-shadow:0 10px 35px var(--glow)
+}
+
+.btn.primary{
+ background:var(--accent);
+ color:#160d12;
+ border-color:var(--accent);
+ font-weight:700
+}
+
+.btn.danger{
+ border-color:#e96d78;
+ color:#ff9ba5
+}
+
+.btn.small{
+ padding:9px 13px;
+ font-size:12px
+}
+
+/* =========================================================
+   NAV
+========================================================= */
+
+.nav{
+ position:fixed;
+ top:0;
+ left:0;
+ right:0;
+ z-index:1000;
+ background:linear-gradient(rgba(9,7,10,.94),transparent);
+ backdrop-filter:blur(14px)
+}
+
+.nav-inner{
+ width:min(1200px,94%);
+ margin:auto;
+ min-height:78px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:20px
+}
+
+.logo{
+ font-family:var(--font-display);
+ font-size:20px;
+ letter-spacing:2px
+}
+
+.logo small{
+ display:block;
+ font-family:var(--font-body);
+ font-size:7px;
+ letter-spacing:3px;
+ color:var(--muted);
+ margin-top:4px
+}
+
+.nav-links{
+ display:flex;
+ gap:20px;
+ font-size:12px;
+ color:var(--muted)
+}
+
+.nav-links a:hover{color:var(--accent)}
+
+.nav-actions{
+ display:flex;
+ gap:8px
+}
+
+.menu-btn{display:none}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+ min-height:100svh;
+ position:relative;
+ display:flex;
+ align-items:flex-end;
+ padding:130px 0 80px;
+ overflow:hidden
+}
+
+/* NEW HERO SLIDESHOW */
+
+.hero-photo-slider{
+ position:absolute;
+ inset:-4%;
+ overflow:hidden;
+ background:var(--bg);
+ will-change:transform
+}
+
+.hero-slide{
+ position:absolute;
+ inset:0;
+ background-size:cover;
+ background-position:center;
+ background-repeat:no-repeat;
+ opacity:0;
+ transform:scale(1.08);
+ filter:saturate(.75) contrast(1.05) blur(.4px);
+ transition:
+  opacity .7s ease,
+  transform 1.8s cubic-bezier(.2,.7,.2,1);
+ will-change:opacity,transform
+}
+
+.hero-slide.active{
+ opacity:.58;
+ transform:scale(1)
+}
+
+.hero-slide.previous{
+ opacity:0;
+ transform:scale(1.13)
+}
+
+.hero-photo-slider:after{
+ content:"";
+ position:absolute;
+ inset:0;
+ pointer-events:none;
+ z-index:2;
+ background:
+  linear-gradient(
+   90deg,
+   rgba(9,7,10,.96) 0%,
+   rgba(9,7,10,.52) 45%,
+   rgba(9,7,10,.20) 100%
+  ),
+  linear-gradient(
+   0deg,
+   var(--bg) 0%,
+   transparent 48%
+  )
+}
+
+/* Parallax layer */
+
+.hero-parallax{
+ position:absolute;
+ inset:-8%;
+ z-index:1;
+ pointer-events:none;
+ transform:translate3d(0,0,0);
+ will-change:transform
+}
+
+.hero-bg{
+ position:absolute;
+ inset:0;
+ z-index:2;
+ pointer-events:none;
+ background:
+ linear-gradient(
+  90deg,
+  rgba(9,7,10,.20),
+  transparent 55%,
+  rgba(9,7,10,.12)
+ ),
+ linear-gradient(
+  0deg,
+  var(--bg) 0%,
+  transparent 45%
+ )
+}
+
+.hero-content{
+ position:relative;
+ z-index:4;
+ width:min(1000px,92%);
+ margin:auto
+}
+
+.hero-kicker{
+ color:var(--accent);
+ letter-spacing:5px;
+ font-size:11px;
+ margin-bottom:22px
+}
+
+.hero h1{
+ font-family:var(--font-display);
+ font-weight:400;
+ font-size:clamp(65px,13vw,150px);
+ line-height:.78;
+ letter-spacing:-5px
+}
+
+.hero h1 span{
+ display:block;
+ color:var(--accent)
+}
+
+.hero-sub{
+ max-width:560px;
+ margin:30px 0;
+ color:var(--muted);
+ line-height:1.8;
+ font-size:15px
+}
+
+.hero-buttons{
+ display:flex;
+ flex-wrap:wrap;
+ gap:10px
+}
+
+.hero-scroll{
+ position:absolute;
+ z-index:5;
+ right:5%;
+ bottom:35px;
+ writing-mode:vertical-rl;
+ color:var(--muted);
+ letter-spacing:3px;
+ font-size:9px
+}
+
+.hero-photo-count{
+ position:absolute;
+ z-index:5;
+ right:5%;
+ top:50%;
+ transform:translateY(-50%);
+ color:var(--muted);
+ font-size:8px;
+ letter-spacing:2px;
+ opacity:.7
+}
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about-grid{
+ display:grid;
+ grid-template-columns:1.2fr .8fr;
+ gap:60px;
+ align-items:center
+}
+
+.about-copy{
+ color:var(--muted);
+ line-height:1.9;
+ font-size:16px
+}
+
+.quote{
+ border-left:2px solid var(--accent);
+ padding:25px;
+ font-family:var(--font-display);
+ font-size:28px;
+ line-height:1.25;
+ background:var(--card);
+ border-radius:0 20px 20px 0
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ border-top:1px solid var(--line);
+ border-bottom:1px solid var(--line)
+}
+
+.stat{
+ padding:35px 20px;
+ border-right:1px solid var(--line)
+}
+
+.stat:last-child{border-right:0}
+
+.stat b{
+ display:block;
+ font-family:var(--font-display);
+ font-size:46px;
+ color:var(--accent)
+}
+
+.stat span{
+ font-size:10px;
+ letter-spacing:2px;
+ color:var(--muted)
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.cards{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:18px
+}
+
+.card{
+ background:var(--card);
+ border:1px solid var(--line);
+ border-radius:var(--radius);
+ padding:28px;
+ backdrop-filter:blur(15px);
+ transition:.4s
+}
+
+.card:hover{
+ transform:translateY(-5px);
+ border-color:var(--accent);
+ box-shadow:0 20px 60px var(--glow)
+}
+
+.card-icon{
+ font-size:25px;
+ margin-bottom:18px
+}
+
+.card h3{
+ font-family:var(--font-display);
+ font-size:27px;
+ font-weight:400;
+ margin-bottom:12px
+}
+
+.card p{
+ color:var(--muted);
+ line-height:1.7;
+ font-size:14px
+}
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+.achievements{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:14px
+}
+
+.achievement{
+ padding:24px;
+ border:1px solid var(--line);
+ background:var(--card);
+ border-radius:18px
+}
+
+.achievement b{
+ color:var(--accent);
+ font-size:11px;
+ letter-spacing:2px
+}
+
+.achievement h3{
+ font-family:var(--font-display);
+ font-size:24px;
+ margin:8px 0
+}
+
+.achievement p{
+ color:var(--muted);
+ font-size:13px;
+ line-height:1.6
+}
+
+/* =========================================================
+   MEETINGS
+========================================================= */
+
+.timeline{position:relative}
+
+.timeline:before{
+ content:"";
+ position:absolute;
+ left:14px;
+ top:0;
+ bottom:0;
+ width:1px;
+ background:var(--line)
+}
+
+.meeting{
+ position:relative;
+ margin-left:45px;
+ margin-bottom:25px;
+ padding:25px;
+ border:1px solid var(--line);
+ background:var(--card);
+ border-radius:20px
+}
+
+.meeting:before{
+ content:"";
+ position:absolute;
+ left:-37px;
+ top:28px;
+ width:13px;
+ height:13px;
+ border-radius:50%;
+ background:var(--accent);
+ box-shadow:0 0 20px var(--glow)
+}
+
+.meeting-type{
+ color:var(--accent);
+ font-size:9px;
+ letter-spacing:3px;
+ text-transform:uppercase
+}
+
+.meeting h3{
+ font-family:var(--font-display);
+ font-size:30px;
+ margin:8px 0 12px
+}
+
+.meeting-meta{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+ color:var(--muted);
+ font-size:11px
+}
+
+.meeting-meta span{
+ padding:7px 10px;
+ border:1px solid var(--line);
+ border-radius:999px
+}
+
+.meeting p{
+ margin-top:16px;
+ color:var(--muted);
+ line-height:1.7;
+ font-size:13px
+}
+
+/* =========================================================
+   UPCOMING
+========================================================= */
+
+.upcoming{
+ padding:55px;
+ border:1px solid var(--line);
+ border-radius:30px;
+ background:
+ radial-gradient(circle at 80% 20%,var(--glow),transparent 35%),
+ var(--card)
+}
+
+.countdown{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:10px;
+ margin:30px 0
+}
+
+.count{
+ padding:18px 8px;
+ text-align:center;
+ border:1px solid var(--line);
+ border-radius:15px
+}
+
+.count b{
+ font-family:var(--font-display);
+ font-size:36px;
+ color:var(--accent)
+}
+
+.count span{
+ display:block;
+ color:var(--muted);
+ font-size:9px;
+ letter-spacing:2px
+}
+
+/* =========================================================
+   LIVE
+========================================================= */
+
+.live-box{
+ min-height:350px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ border:1px solid var(--line);
+ border-radius:30px;
+ position:relative;
+ overflow:hidden;
+ background:
+ radial-gradient(circle at center,var(--glow),transparent 45%),
+ var(--card)
+}
+
+.live-dot{
+ width:10px;
+ height:10px;
+ display:inline-block;
+ border-radius:50%;
+ background:#e65c6b;
+ box-shadow:0 0 20px #e65c6b;
+ animation:pulse 1.4s infinite
+}
+
+@keyframes pulse{
+ 50%{transform:scale(1.8);opacity:.4}
+}
+
+/* =========================================================
+   TRAVEL
+========================================================= */
+
+.travel-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:15px
+}
+
+.travel{
+ min-height:240px;
+ border-radius:22px;
+ overflow:hidden;
+ position:relative;
+ border:1px solid var(--line);
+ background-size:cover;
+ background-position:center
+}
+
+.travel:after{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:linear-gradient(transparent 25%,rgba(0,0,0,.9))
+}
+
+.travel-info{
+ position:absolute;
+ z-index:1;
+ bottom:20px;
+ left:20px
+}
+
+.travel-info small{color:var(--accent)}
+
+.travel-info h3{
+ font-family:var(--font-display);
+ font-size:28px
+}
+
+/* =========================================================
+   GALLERY
+========================================================= */
+
+.gallery{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px
+}
+
+.gallery-item{
+ aspect-ratio:1;
+ border-radius:18px;
+ overflow:hidden;
+ border:1px solid var(--line);
+ background:var(--card)
+}
+
+.gallery-item img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ display:block
+}
+
+/* =========================================================
+   SOCIAL
+========================================================= */
+
+.social{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:15px
+}
+
+.social a{
+ padding:25px;
+ border:1px solid var(--line);
+ border-radius:18px;
+ background:var(--card)
+}
+
+.social small{color:var(--muted)}
+
+.social b{
+ display:block;
+ margin-top:7px;
+ color:var(--accent)
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+ padding:50px 0;
+ border-top:1px solid var(--line);
+ color:var(--muted);
+ text-align:center;
+ font-size:11px;
+ letter-spacing:2px
+}
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+#admin{
+ position:fixed;
+ inset:0;
+ z-index:9000;
+ display:none;
+ background:rgba(0,0,0,.72);
+ backdrop-filter:blur(10px)
+}
+
+#admin.open{display:block}
+
+.admin-shell{
+ position:absolute;
+ inset:3vh 3vw;
+ display:grid;
+ grid-template-columns:230px 1fr;
+ background:var(--bg2);
+ border:1px solid var(--line);
+ border-radius:25px;
+ overflow:hidden;
+ box-shadow:0 30px 100px #000
+}
+
+.sidebar{
+ border-right:1px solid var(--line);
+ padding:25px 12px;
+ overflow:auto
+}
+
+.side-brand{
+ font-family:var(--font-display);
+ font-size:24px;
+ padding:0 12px 25px
+}
+
+.side-brand span{color:var(--accent)}
+
+.side-menu button{
+ width:100%;
+ border:0;
+ background:transparent;
+ color:var(--muted);
+ text-align:left;
+ padding:11px 12px;
+ border-radius:10px;
+ margin-bottom:3px;
+ font-size:12px
+}
+
+.side-menu button:hover,
+.side-menu button.active{
+ background:var(--card);
+ color:var(--text)
+}
+
+.admin-main{
+ overflow:auto;
+ padding:30px
+}
+
+.admin-top{
+ display:flex;
+ justify-content:space-between;
+ gap:15px;
+ align-items:center;
+ margin-bottom:25px
+}
+
+.admin-top h2{
+ font-family:var(--font-display);
+ font-weight:400
+}
+
+.admin-section{display:none}
+
+.admin-section.active{display:block}
+
+.admin-section h3{
+ font-family:var(--font-display);
+ font-size:32px;
+ font-weight:400;
+ margin-bottom:7px
+}
+
+.admin-help{
+ color:var(--muted);
+ font-size:12px;
+ margin-bottom:20px
+}
+
+.admin-card{
+ padding:20px;
+ border:1px solid var(--line);
+ border-radius:18px;
+ background:var(--card);
+ margin-bottom:15px
+}
+
+.admin-grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:14px
+}
+
+.field{
+ display:flex;
+ flex-direction:column;
+ gap:7px
+}
+
+.field.full{grid-column:1/-1}
+
+.field label{
+ color:var(--muted);
+ font-size:10px;
+ letter-spacing:1px;
+ text-transform:uppercase
+}
+
+.field input,
+.field textarea,
+.field select{
+ width:100%;
+ padding:12px;
+ color:var(--text);
+ background:rgba(0,0,0,.22);
+ border:1px solid var(--line);
+ border-radius:10px;
+ outline:none
+}
+
+.field textarea{
+ min-height:100px;
+ resize:vertical
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+ border-color:var(--accent)
+}
+
+.admin-actions{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+ margin-top:15px
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard-stats{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:10px;
+ margin-bottom:20px
+}
+
+.dash-stat{
+ border:1px solid var(--line);
+ background:var(--card);
+ padding:20px;
+ border-radius:16px
+}
+
+.dash-stat b{
+ display:block;
+ color:var(--accent);
+ font-family:var(--font-display);
+ font-size:32px
+}
+
+.dash-stat span{
+ font-size:10px;
+ color:var(--muted)
+}
+
+/* =========================================================
+   THEMES
+========================================================= */
+
+.theme-grid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:10px
+}
+
+.theme-option{
+ padding:16px;
+ border-radius:15px;
+ border:1px solid var(--line);
+ background:var(--card);
+ cursor:pointer;
+ text-align:left
+}
+
+.theme-option:hover,
+.theme-option.active{
+ border-color:var(--accent)
+}
+
+.theme-preview{
+ height:50px;
+ border-radius:10px;
+ margin-bottom:10px
+}
+
+.theme-option b{font-size:11px}
+
+.theme-option small{
+ display:block;
+ color:var(--muted);
+ margin-top:4px
+}
+
+/* =========================================================
+   FESTIVALS
+========================================================= */
+
+.special-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px
+}
+
+.special{
+ min-height:110px;
+ padding:18px;
+ border-radius:16px;
+ border:1px solid var(--line);
+ cursor:pointer;
+ background:var(--card)
+}
+
+.special:hover,
+.special.active{
+ border-color:var(--accent)
+}
+
+.special b{
+ display:block;
+ margin-bottom:7px
+}
+
+.special small{color:var(--muted)}
+
+/* =========================================================
+   LISTS
+========================================================= */
+
+.list-row{
+ padding:15px;
+ border:1px solid var(--line);
+ border-radius:13px;
+ margin-bottom:9px;
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ align-items:center
+}
+
+.list-row small{
+ color:var(--muted);
+ display:block;
+ margin-top:4px
+}
+
+.list-actions{
+ display:flex;
+ gap:5px;
+ flex-wrap:wrap
+}
+
+.status{
+ padding:5px 9px;
+ border-radius:999px;
+ font-size:9px;
+ border:1px solid var(--line)
+}
+
+.status.Pending{color:#e8c66e}
+.status.Confirmed{color:#79d39a}
+.status.Cancelled{color:#ed7c88}
+
+/* =========================================================
+   HERO ADMIN PHOTO PREVIEW
+========================================================= */
+
+.hero-photo-admin-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+ margin-top:14px
+}
+
+.hero-photo-admin-item{
+ position:relative;
+ aspect-ratio:16/10;
+ overflow:hidden;
+ border-radius:12px;
+ border:1px solid var(--line);
+ background:var(--bg2)
+}
+
+.hero-photo-admin-item img{
+ width:100%;
+ height:100%;
+ display:block;
+ object-fit:cover
+}
+
+.hero-photo-number{
+ position:absolute;
+ top:7px;
+ left:7px;
+ padding:4px 8px;
+ border-radius:999px;
+ background:rgba(0,0,0,.68);
+ color:#fff;
+ font-size:9px
+}
+
+.hero-photo-empty{
+ padding:20px;
+ border:1px dashed var(--line);
+ border-radius:14px;
+ color:var(--muted);
+ text-align:center;
+ font-size:11px
+}
+
+/* =========================================================
+   PREVIEW PHOTO
+========================================================= */
+
+.preview-photo{
+ width:100%;
+ max-height:250px;
+ object-fit:cover;
+ border-radius:15px;
+ border:1px solid var(--line)
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+#toast{
+ position:fixed;
+ z-index:11000;
+ bottom:25px;
+ left:50%;
+ transform:translateX(-50%) translateY(30px);
+ opacity:0;
+ pointer-events:none;
+ background:#fff;
+ color:#111;
+ padding:12px 18px;
+ border-radius:999px;
+ font-size:12px;
+ transition:.3s;
+ box-shadow:0 10px 40px #000
+}
+
+#toast.show{
+ opacity:1;
+ transform:translateX(-50%) translateY(0)
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+ position:fixed;
+ inset:0;
+ z-index:8000;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:18px;
+ background:rgba(0,0,0,.75);
+ backdrop-filter:blur(12px)
+}
+
+.modal.show{display:flex}
+
+.modal-box{
+ width:min(500px,100%);
+ max-height:90vh;
+ overflow:auto;
+ padding:28px;
+ border:1px solid var(--line);
+ border-radius:25px;
+ background:var(--bg2);
+ box-shadow:0 30px 100px #000
+}
+
+.modal-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ margin-bottom:20px
+}
+
+.modal-head h3{
+ font-family:var(--font-display);
+ font-size:32px;
+ font-weight:400
+}
+
+.close{
+ border:0;
+ background:transparent;
+ color:var(--muted);
+ font-size:28px
+}
+
+/* =========================================================
+   REVEAL
+========================================================= */
+
+.reveal{
+ opacity:0;
+ transform:translateY(30px);
+ transition:opacity .8s,transform .8s
+}
+
+.reveal.visible{
+ opacity:1;
+ transform:none
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:850px){
+
+ .nav-links{display:none}
+
+ .menu-btn{display:block}
+
+ .nav-actions .language-btn{display:none}
+
+ .hero h1{letter-spacing:-3px}
+
+ .about-grid{grid-template-columns:1fr}
+
+ .cards{grid-template-columns:1fr}
+
+ .stats{grid-template-columns:repeat(2,1fr)}
+
+ .stat:nth-child(2){border-right:0}
+
+ .stat{border-bottom:1px solid var(--line)}
+
+ .achievements{grid-template-columns:1fr}
+
+ .travel-grid{grid-template-columns:1fr}
+
+ .gallery{grid-template-columns:repeat(2,1fr)}
+
+ .social{grid-template-columns:1fr}
+
+ .upcoming{padding:30px 20px}
+
+ .countdown{grid-template-columns:repeat(2,1fr)}
+
+ .admin-shell{
+  inset:0;
+  border-radius:0;
+  grid-template-columns:1fr
+ }
+
+ .sidebar{
+  display:none;
+  position:absolute;
+  z-index:4;
+  inset:0 25% 0 0;
+  background:var(--bg2)
+ }
+
+ .sidebar.mobile-open{display:block}
+
+ .admin-main{padding:20px}
+
+ .admin-grid{grid-template-columns:1fr}
+
+ .field.full{grid-column:auto}
+
+ .dashboard-stats{grid-template-columns:repeat(2,1fr)}
+
+ .theme-grid{grid-template-columns:repeat(2,1fr)}
+
+ .special-grid{grid-template-columns:1fr 1fr}
+
+ .hero-photo-admin-grid{
+  grid-template-columns:repeat(2,1fr)
+ }
+
+ .hero-photo-slider{
+  inset:-7%
+ }
+
+ .hero-slide{
+  background-position:center
+ }
+
+ .hero-photo-count{
+  right:18px
+ }
+}
+
+.mobile-side-close{
+ display:none;
+ position:absolute;
+ right:12px;
+ top:12px;
+ border:0;
+ background:transparent;
+ color:var(--muted);
+ font-size:25px
+}
+
+@media(max-width:850px){
+ .mobile-side-close{display:block!important}
+}
+
+@media(max-width:500px){
+
+ .age-content h1{
+  font-size:78px
+ }
+
+ .age-content{
+  width:94%
+ }
+
+ .age-mark{
+  font-size:8px;
+  letter-spacing:3px
+ }
+
+ .hero-photo-admin-grid{
+  grid-template-columns:1fr 1fr
+ }
+
+ .hero-buttons .btn{
+  width:100%
+ }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     CINEMATIC LOADER
+===================================================== -->
+
+<div id="loader">
+ <div class="loader-glow"></div>
+
+ <div class="loader-inner">
+  <div class="loader-mark">PRIVATE VISUAL EXPERIENCE</div>
+
+  <div class="loader-logo">
+   SAM <span>VINI</span>
+  </div>
+
+  <div class="loader-line"></div>
+
+  <div class="loader-status">
+   A STORY IN MOTION
+  </div>
+ </div>
+</div>
+
+
+<div id="grain"></div>
+<div id="effects"></div>
+
+
+<!-- =====================================================
+     AGE GATE
+===================================================== -->
+
+<div id="ageGate">
+
+ <div class="age-photo" id="agePhoto"></div>
+
+ <div class="age-overlay"></div>
+
+ <div class="petals" id="petals"></div>
+
+ <div class="age-content">
+
+  <div class="age-mark">
+   SAM VINI · PRIVATE STORY
+  </div>
+
+  <h1>18+</h1>
+
+  <p>
+   This website contains mature romantic and lifestyle themes.
+   Please confirm that you are 18 years or older.
+  </p>
+
+  <div class="age-actions">
+
+   <button class="btn primary" id="enterSite">
+    I'm 18+ — Enter
+   </button>
+
+   <button class="btn" id="leaveSite">
+    Leave
+   </button>
+
+  </div>
+
+  <p class="age-note">
+   By entering, you confirm that you are at least 18 years old.
+  </p>
+
+ </div>
+
+</div>
+
+
+<!-- =====================================================
+     NAV
+===================================================== -->
+
+<nav class="nav">
+
+ <div class="nav-inner">
+
+  <a href="#home" class="logo">
+   SAM VINI
+   <small>JAIPUR · INDIA</small>
+  </a>
+
+  <div class="nav-links" id="navLinks">
+   <a href="#about">About</a>
+   <a href="#lifestyle">Lifestyle</a>
+   <a href="#meetings">Meetings</a>
+   <a href="#live">Live</a>
+   <a href="#travel">Travel</a>
+   <a href="#gallery">Gallery</a>
+  </div>
+
+  <div class="nav-actions">
+
+   <button class="btn small language-btn" id="languageBtn">
+    हिन्दी
+   </button>
+
+   <button class="btn small" id="adminOpen">
+    Admin
+   </button>
+
+   <button class="btn small menu-btn" id="mobileMenu">
+    ☰
+   </button>
+
+  </div>
+
+ </div>
+
+</nav>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<header class="hero" id="home">
+
+ <div class="hero-photo-slider" id="heroPhotoSlider"></div>
+
+ <div class="hero-parallax" id="heroParallax"></div>
+
+ <div class="hero-bg"></div>
+
+ <div class="hero-content">
+
+  <div class="hero-kicker" id="heroKicker">
+   A STORY IN MOTION
+  </div>
+
+  <h1 id="heroTitle">
+   SAM <span>VINI</span>
+  </h1>
+
+  <p class="hero-sub" id="heroDescription">
+   A visual journal of lifestyle, travel, meetings and beautiful moments.
+  </p>
+
+  <div class="hero-buttons">
+
+   <a class="btn primary" href="#about">
+    Explore Story
+   </a>
+
+   <button class="btn" id="heroBook">
+    Join new Member
+   </button>
+
+  </div>
+
+ </div>
+
+ <div class="hero-scroll">
+  SCROLL ↓
+ </div>
+
+ <div class="hero-photo-count" id="heroPhotoCount"></div>
+
+</header>
+
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section class="section" id="about">
+
+ <div class="container">
+
+  <div class="eyebrow reveal">
+   01 · ABOUT
+  </div>
+
+  <div class="about-grid">
+
+   <div>
+
+    <h2 class="section-title reveal">
+     More than<br>
+     <span>a moment.</span>
+    </h2>
+
+    <p class="about-copy reveal" id="aboutText">
+     Every moment has a different energy.
+     SAM VINI is a personal visual space built around
+     lifestyle, creativity, travel and meaningful meetings.
+    </p>
+
+   </div>
+
+   <div class="quote reveal" id="aboutQuote">
+    “Some stories are not written.
+    They are experienced.”
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<!-- =====================================================
+     STATS
+===================================================== -->
+
+<section class="section" style="padding-top:0">
+
+ <div class="container">
+
+  <div class="stats reveal">
+
+   <div class="stat">
+    <b id="stat1">24</b>
+    <span>STORIES</span>
+   </div>
+
+   <div class="stat">
+    <b id="stat2">08</b>
+    <span>CITIES</span>
+   </div>
+
+   <div class="stat">
+    <b id="stat3">12</b>
+    <span>EVENTS</span>
+   </div>
+
+   <div class="stat">
+    <b id="stat4">∞</b>
+    <span>MOMENTS</span>
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<!-- =====================================================
+     LIFESTYLE
+===================================================== -->
+
+<section class="section" id="lifestyle">
+
+ <div class="container">
+
+  <div class="eyebrow reveal">
+   02 · LIFESTYLE
+  </div>
+
+  <h2 class="section-title reveal">
+   Life, but<br>
+   <span>beautifully.</span>
+  </h2>
+
+  <div class="cards" id="lifestyleCards"></div>
+
+ </div>
+
+</section>
+
+
+<!-- =====================================================
+     ACHIEVEMENTS
+===================================================== -->
+
+<section class="section" id="achievements">
+
+ <div class="container">
+
+  <div class="eyebrow reveal">
+   03 · ACHIEVEMENTS
+  </div>
+
+  <h2 class="section-title reveal">
+   Chapters worth<br>
+   <span>remembering.</span>
+  </h2>
+
+  <div class="achievements" id="achievementList"></div>
+
+ </div>
+
+</section>
+
+
+<!-- =====================================================
+     MEETINGS
+===================================================== -->
+
+<section class="section" id="meetings">
+
+ <div class="container">
+
+  <div class="eyebrow reveal">
+   04 · MEETINGS & EVENTS
+  </div>
+
+  <h2 class="section-title reveal">
+   Every meeting<br>
+   <span>has a story.</span>
+  </h2>
+
+  <div class="timeline" id="meetingList"></div>
+
+ </div>
+
+</section>
+
+
+<!-- =====================================================
+     UPCOMING
+===================================================== -->
+
+<section class="section" id="upcoming">
+
+ <div class="container">
+
+  <div class="eyebrow reveal">
+   05 · UPCOMING
+  </div>
+
+  <div class="upcoming reveal">
+
+   <h2 class="section-title" style="margin-bottom:10px">
+
+    <span id="upcomingTitle">
+     The next chapter.
+    </span>
+
+   </h2>
+
+   <p class="muted" id="upcomingDescription">
+    The countdown has started.
+   </p>
+
+   <div class="countdown">
+
+    <div class="count">
+     <b id="cdDays">00</b>
+     <span>DAYS</span>
+    </div>
+
+    <div class="count">
+     <b id="cdHours">00</b>
+     <span>HOURS</span>
+    </div>
+
+    <div class="count">
+     <b id="cdMinutes">00</b>
+     <span>MINUTES</span>
+    </div>
+
+    <div class="count">
+     <b id="cdSeconds">00</b>
+     <span>SECONDS</span>
+    </div>
+
+   </div>
+
+   <div class="muted" id="upcomingMeta"></div>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<!-- =====================================================
+     LIVE
+===================================================== -->
+
+<section class="section" id="live">
+
+ <div class="container">
+
+  <div class="eyebrow reveal">
+   06 · LIVE
+  </div>
+
+  <div class="live-box reveal">
+
+   <div>
+
+    <div style="margin-bottom:15px">
+
+     <span class="live-dot"></span>
+
+     <span style="
+      margin-left:8px;
+      color:var(--muted);
+      font-size:11px;
+      letter-spacing:2px
+     ">
+      LIVE ACCESS
+     </span>
+
+    </div>
+
+    <h2 class="section-title" style="margin-bottom:15px">
+     Join the<br>
+     <span>moment.</span>
+    </h2>
+
+    <p
+     class="muted"
+     id="liveDescription"
+     style="max-width:500px;margin:auto;line-height:1.7"
+    >
+     Live access and instructions are provided through Telegram.
+    </p>
+
+    <button
+     class="btn primary"
+     id="liveButton"
+     style="margin-top:25px"
+    >
+     Join Live
+    </button>
+
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<!-- =====================================================
+     TRAVEL
+===================================================== -->
+
+<section class="section" id="travel">
+
+ <div class="container">
+
+  <div class="eyebrow reveal">
+   07 · TRAVEL
+  </div>
+
+  <h2 class="section-title reveal">
+   Places that<br>
+   <span>stay with you.</span>
+  </h2>
+
+  <div class="travel-grid" id="travelList"></div>
+
+ </div>
+
+</section>
+
+
+<!-- =====================================================
+     GALLERY
+===================================================== -->
+
+<section class="section" id="gallery">
+
+ <div class="container">
+
+  <div class="eyebrow reveal">
+   08 · GALLERY
+  </div>
+
+  <h2 class="section-title reveal">
+   Moments in<br>
+   <span>frames.</span>
+  </h2>
+
+  <div class="gallery" id="galleryList"></div>
+
+ </div>
+
+</section>
+
+
+<!-- =====================================================
+     SOCIAL
+===================================================== -->
+
+<section class="section" id="social">
+
+ <div class="container">
+
+  <div class="eyebrow reveal">
+   09 · SOCIAL
+  </div>
+
+  <h2 class="section-title reveal">
+   Stay<br>
+   <span>connected.</span>
+  </h2>
+
+  <div class="social" id="socialList"></div>
+
+ </div>
+
+</section>
+
+
+<footer>
+ © 2026 SAM VINI · A STORY IN MOTION
+</footer>
+
+
+<!-- =====================================================
+     JOIN MODAL
+===================================================== -->
+
+<div class="modal" id="bookingModal">
+
+ <div class="modal-box">
+
+  <div class="modal-head">
+
+   <h3>Joining New Member</h3>
+
+   <button class="close" id="bookingClose">
+    ×
+   </button>
+
+  </div>
+
+  <p
+   class="muted"
+   style="font-size:12px;line-height:1.7;margin-bottom:20px"
+  >
+   Enter only the basic details below. Your member request
+   will open Telegram with a prepared message.
+  </p>
+
+  <div class="admin-grid">
+
+   <div class="field">
+
+    <label>Name</label>
+
+    <input
+     id="bookName"
+     placeholder="Your name"
+    >
+
+   </div>
+
+   <div class="field">
+
+    <label>Age</label>
+
+    <input
+     id="bookAge"
+     type="number"
+     min="1"
+     max="120"
+     placeholder="Age"
+    >
+
+   </div>
+
+   <div class="field">
+
+    <label>Gender</label>
+
+    <select id="bookGender">
+
+     <option value="">
+      Select
+     </option>
+
+     <option>
+      Male
+     </option>
+
+     <option>
+      Female
+     </option>
+
+     <option>
+      Other
+     </option>
+
+    </select>
+
+   </div>
+
+   <div class="field">
+
+    <label>Address</label>
+
+    <input
+     id="bookAddress"
+     placeholder="City / Address"
+    >
+
+   </div>
+
+  </div>
+
+  <div class="admin-actions">
+
+   <button
+    class="btn primary"
+    id="submitBooking"
+   >
+    Continue to Telegram
+   </button>
+
+   <button
+    class="btn"
+    id="cancelBooking"
+   >
+    Cancel
+   </button>
+
+  </div>
+
+ </div>
+
+</div>
+
+
+<!-- =====================================================
+     ADMIN
+===================================================== -->
+
+<div id="admin">
+
+ <div class="admin-shell">
+
+  <aside class="sidebar" id="sidebar">
+
+   <button
+    class="mobile-side-close"
+    id="sideClose"
+   >
+    ×
+   </button>
+
+   <div class="side-brand">
+    SAM <span>VINI</span>
+   </div>
+
+   <div class="side-menu">
+
+    <button
+     class="active"
+     data-panel="dashboardPanel"
+    >
+     📊 Dashboard
+    </button>
+
+    <button data-panel="themePanel">
+     🎨 Design / Theme
+    </button>
+
+    <button data-panel="festivalPanel">
+     🎉 Festival Themes
+    </button>
+
+    <button data-panel="seasonPanel">
+     🌦️ Seasonal Theme
+    </button>
+
+    <button data-panel="heroPanel">
+     ✨ Hero
+    </button>
+
+    <button data-panel="contentPanel">
+     ✍️ Content
+    </button>
+
+    <button data-panel="photoPanel">
+     🖼️ Photo Studio
+    </button>
+
+    <button data-panel="achievementsPanel">
+     🏆 Achievements
+    </button>
+
+    <button data-panel="meetingsPanel">
+     🤝 Meetings
+    </button>
+
+    <button data-panel="bookingsPanel">
+     📋 Bookings
+    </button>
+
+    <button data-panel="upcomingPanel">
+     📅 Upcoming
+    </button>
+
+    <button data-panel="livePanel">
+     🎥 Live Show
+    </button>
+
+    <button data-panel="travelPanel">
+     ✈️ Travel
+    </button>
+
+    <button data-panel="galleryPanel">
+     📸 Gallery
+    </button>
+
+    <button data-panel="socialPanel">
+     📱 Social
+    </button>
+
+    <button data-panel="telegramPanel">
+     📲 Telegram Connection
+    </button>
+
+    <button data-panel="languagePanel">
+     🌐 Language
+    </button>
+
+    <button data-panel="settingsPanel">
+     ⚙️ Settings
+    </button>
+
+   </div>
+
+  </aside>
+
+
+  <main class="admin-main">
+
+   <div class="admin-top">
+
+    <div>
+
+     <h2>
+      SAM VINI Control Studio
+     </h2>
+
+     <p
+      class="muted"
+      style="font-size:11px"
+     >
+      Private website management
+     </p>
+
+    </div>
+
+    <div style="display:flex;gap:7px">
+
+     <button
+      class="btn small"
+      id="sideOpen"
+     >
+      ☰
+     </button>
+
+     <button
+      class="btn small"
+      id="previewBtn"
+     >
+      Preview
+     </button>
+
+     <button
+      class="btn small danger"
+      id="adminClose"
+     >
+      Close
+     </button>
+
+    </div>
+
+   </div>
+
+
+   <!-- ===================================================
+        DASHBOARD
+   =================================================== -->
+
+   <section
+    class="admin-section active"
+    id="dashboardPanel"
+   >
+
+    <h3>Dashboard</h3>
+
+    <p class="admin-help">
+     Quick overview of your SAM VINI website.
+    </p>
+
+    <div class="dashboard-stats">
+
+     <div class="dash-stat">
+      <b id="dashAchievements">0</b>
+      <span>Achievements</span>
+     </div>
+
+     <div class="dash-stat">
+      <b id="dashMeetings">0</b>
+      <span>Meetings</span>
+     </div>
+
+     <div class="dash-stat">
+      <b id="dashTravel">0</b>
+      <span>Destinations</span>
+     </div>
+
+     <div class="dash-stat">
+      <b id="dashGallery">0</b>
+      <span>Photos</span>
+     </div>
+
+    </div>
+
+    <div class="admin-card">
+
+     <h4>Storage</h4>
+
+     <p
+      class="muted"
+      id="storageInfo"
+      style="margin-top:8px"
+     ></p>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn small"
+       id="exportBtn"
+      >
+       Export Backup
+      </button>
+
+      <label class="btn small">
+       Import Backup
+       <input
+        type="file"
+        id="importFile"
+        accept=".json"
+        hidden
+       >
+      </label>
+
+      <button
+       class="btn small danger"
+       id="resetBtn"
+      >
+       Reset Website
+      </button>
+
+     </div>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        THEME
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="themePanel"
+   >
+
+    <h3>
+     Design / Theme Studio
+    </h3>
+
+    <p class="admin-help">
+     Change the visual mood without changing the SAM VINI identity.
+    </p>
+
+    <div class="admin-card">
+
+     <h4>Premium Themes</h4>
+
+     <div
+      class="theme-grid"
+      id="themeGrid"
+     ></div>
+
+    </div>
+
+    <div class="admin-card">
+
+     <h4>Custom Colors</h4>
+
+     <div
+      class="admin-grid"
+      style="margin-top:15px"
+     >
+
+      <div class="field">
+       <label>Background</label>
+       <input
+        type="color"
+        id="customBg"
+       >
+      </div>
+
+      <div class="field">
+       <label>Background 2</label>
+       <input
+        type="color"
+        id="customBg2"
+       >
+      </div>
+
+      <div class="field">
+       <label>Accent</label>
+       <input
+        type="color"
+        id="customAccent"
+       >
+      </div>
+
+      <div class="field">
+       <label>Accent 2</label>
+       <input
+        type="color"
+        id="customAccent2"
+       >
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="applyCustom"
+      >
+       Apply Custom
+      </button>
+
+     </div>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        FESTIVAL
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="festivalPanel"
+   >
+
+    <h3>
+     Festival & Special Themes
+    </h3>
+
+    <p class="admin-help">
+     Non-religious lifestyle themes. Each theme changes colours,
+     glow, atmosphere and decorative animation.
+    </p>
+
+    <div
+     class="special-grid"
+     id="festivalGrid"
+    ></div>
+
+    <div class="admin-actions">
+
+     <button
+      class="btn"
+      id="festivalOff"
+     >
+      Turn Festival Theme OFF
+     </button>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        SEASON
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="seasonPanel"
+   >
+
+    <h3>
+     Seasonal Theme Engine
+    </h3>
+
+    <p class="admin-help">
+     Automatic seasonal atmosphere with elegant animations.
+    </p>
+
+    <div class="admin-card">
+
+     <div class="admin-grid">
+
+      <div class="field">
+
+       <label>
+        Season Mode
+       </label>
+
+       <select id="seasonMode">
+
+        <option value="auto">
+         Auto
+        </option>
+
+        <option value="manual">
+         Manual
+        </option>
+
+        <option value="off">
+         Off
+        </option>
+
+       </select>
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Manual Season
+       </label>
+
+       <select id="manualSeason">
+
+        <option value="winter">
+         Winter
+        </option>
+
+        <option value="spring">
+         Spring
+        </option>
+
+        <option value="summer">
+         Summer
+        </option>
+
+        <option value="monsoon">
+         Monsoon
+        </option>
+
+       </select>
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Animation Intensity
+       </label>
+
+       <select id="animationIntensity">
+
+        <option value="low">
+         Low
+        </option>
+
+        <option value="medium">
+         Medium
+        </option>
+
+        <option value="high">
+         High
+        </option>
+
+       </select>
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Season Effect
+       </label>
+
+       <select id="seasonEffect">
+
+        <option value="on">
+         On
+        </option>
+
+        <option value="off">
+         Off
+        </option>
+
+       </select>
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="saveSeason"
+      >
+       Save Seasonal Settings
+      </button>
+
+      <button
+       class="btn"
+       id="seasonOff"
+      >
+       Turn Season OFF
+      </button>
+
+     </div>
+
+    </div>
+
+    <div class="admin-card">
+
+     <h4>
+      Season behaviour
+     </h4>
+
+     <p
+      class="muted"
+      style="line-height:1.8;margin-top:10px"
+     >
+      Winter: November–February<br>
+      Spring: March–April<br>
+      Summer: May–June<br>
+      Monsoon: July–October
+     </p>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        HERO ADMIN
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="heroPanel"
+   >
+
+    <h3>
+     Hero
+    </h3>
+
+    <p class="admin-help">
+     Edit the opening experience and manage the hero slideshow.
+    </p>
+
+    <div class="admin-card">
+
+     <div class="admin-grid">
+
+      <div class="field full">
+
+       <label>
+        Kicker
+       </label>
+
+       <input id="heroKickerInput">
+
+      </div>
+
+      <div class="field full">
+
+       <label>
+        Title
+       </label>
+
+       <input id="heroTitleInput">
+
+      </div>
+
+      <div class="field full">
+
+       <label>
+        Description
+       </label>
+
+       <textarea id="heroDescriptionInput"></textarea>
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="saveHero"
+      >
+       Save Hero
+      </button>
+
+     </div>
+
+    </div>
+
+
+    <!-- HERO SLIDESHOW -->
+
+    <div class="admin-card">
+
+     <h4>
+      Hero Slideshow
+     </h4>
+
+     <p class="admin-help" style="margin-top:8px">
+
+      Add 2–5 photos. They automatically change every
+      <b style="color:var(--accent)">
+       1 second
+      </b>
+      with a cinematic transition.
+
+      If you add only 2 or 3 photos, they will keep looping.
+
+     </p>
+
+     <div class="admin-actions">
+
+      <label class="btn primary">
+
+       + Add 2–5 Hero Photos
+
+       <input
+        type="file"
+        id="heroPhotosInput"
+        accept="image/*"
+        multiple
+        hidden
+       >
+
+      </label>
+
+      <button
+       class="btn danger"
+       id="removeHeroSlideshow"
+      >
+       Remove Slideshow Photos
+      </button>
+
+     </div>
+
+     <div
+      id="heroPhotosPreview"
+      class="hero-photo-admin-grid"
+     ></div>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        CONTENT
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="contentPanel"
+   >
+
+    <h3>
+     Content
+    </h3>
+
+    <p class="admin-help">
+     Edit About and statistics.
+    </p>
+
+    <div class="admin-card">
+
+     <div class="admin-grid">
+
+      <div class="field full">
+
+       <label>
+        About Text
+       </label>
+
+       <textarea id="aboutTextInput"></textarea>
+
+      </div>
+
+      <div class="field full">
+
+       <label>
+        Quote
+       </label>
+
+       <textarea id="aboutQuoteInput"></textarea>
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Stories
+       </label>
+
+       <input id="stat1Input">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Cities
+       </label>
+
+       <input id="stat2Input">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Events
+       </label>
+
+       <input id="stat3Input">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Moments
+       </label>
+
+       <input id="stat4Input">
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="saveContent"
+      >
+       Save Content
+      </button>
+
+     </div>
+
+    </div>
+
+
+    <div class="admin-card">
+
+     <h4>
+      Lifestyle Cards
+     </h4>
+
+     <div
+      class="admin-grid"
+      style="margin-top:15px"
+     >
+
+      <div class="field">
+
+       <label>
+        Card 1 Title
+       </label>
+
+       <input id="life1Title">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Card 1 Text
+       </label>
+
+       <textarea id="life1Text"></textarea>
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Card 2 Title
+       </label>
+
+       <input id="life2Title">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Card 2 Text
+       </label>
+
+       <textarea id="life2Text"></textarea>
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Card 3 Title
+       </label>
+
+       <input id="life3Title">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Card 3 Text
+       </label>
+
+       <textarea id="life3Text"></textarea>
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="saveLifestyle"
+      >
+       Save Lifestyle
+      </button>
+
+     </div>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        PHOTO STUDIO
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="photoPanel"
+   >
+
+    <h3>
+     Photo Studio
+    </h3>
+
+    <p class="admin-help">
+     Replace the primary fallback hero photo.
+     The slideshow above can contain 2–5 photos.
+    </p>
+
+    <div class="admin-card">
+
+     <img
+      id="adminPhotoPreview"
+      class="preview-photo"
+      alt="Hero preview"
+     >
+
+     <div class="admin-actions">
+
+      <label class="btn primary">
+
+       Replace Hero Photo
+
+       <input
+        type="file"
+        id="heroPhotoInput"
+        accept="image/*"
+        hidden
+       >
+
+      </label>
+
+      <button
+       class="btn danger"
+       id="removeHeroPhoto"
+      >
+       Remove Photo
+      </button>
+
+     </div>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        ACHIEVEMENTS
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="achievementsPanel"
+   >
+
+    <h3>
+     Achievements
+    </h3>
+
+    <p class="admin-help">
+     Add and manage achievements.
+    </p>
+
+    <div class="admin-card">
+
+     <div class="admin-grid">
+
+      <div class="field">
+
+       <label>
+        Year
+       </label>
+
+       <input id="achYear">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Title
+       </label>
+
+       <input id="achTitle">
+
+      </div>
+
+      <div class="field full">
+
+       <label>
+        Description
+       </label>
+
+       <textarea id="achDescription"></textarea>
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="addAchievement"
+      >
+       + Add Achievement
+      </button>
+
+     </div>
+
+    </div>
+
+    <div id="adminAchievementList"></div>
+
+   </section>
+
+
+   <!-- ===================================================
+        MEETINGS
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="meetingsPanel"
+   >
+
+    <h3>
+     Meetings & Events
+    </h3>
+
+    <p class="admin-help">
+     Create meeting and event entries.
+    </p>
+
+    <div class="admin-card">
+
+     <div class="admin-grid">
+
+      <div class="field">
+
+       <label>
+        Type
+       </label>
+
+       <select id="meetingType">
+
+        <option>
+         Meeting
+        </option>
+
+        <option>
+         Event
+        </option>
+
+        <option>
+         Appearance
+        </option>
+
+        <option>
+         Live Show
+        </option>
+
+       </select>
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Title
+       </label>
+
+       <input id="meetingTitle">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Date
+       </label>
+
+       <input
+        id="meetingDate"
+        type="date"
+       >
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Time
+       </label>
+
+       <input
+        id="meetingTime"
+        type="time"
+       >
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Location
+       </label>
+
+       <input id="meetingLocation">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Program
+       </label>
+
+       <input id="meetingProgram">
+
+      </div>
+
+      <div class="field full">
+
+       <label>
+        Description
+       </label>
+
+       <textarea id="meetingDescription"></textarea>
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="addMeeting"
+      >
+       + Add Meeting
+      </button>
+
+     </div>
+
+    </div>
+
+    <div id="adminMeetingList"></div>
+
+   </section>
+
+
+   <!-- ===================================================
+        BOOKINGS
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="bookingsPanel"
+   >
+
+    <h3>
+     Joining
+    </h3>
+
+    <p class="admin-help">
+     Member requests submitted through this browser.
+    </p>
+
+    <div id="adminBookingList"></div>
+
+   </section>
+
+
+   <!-- ===================================================
+        UPCOMING
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="upcomingPanel"
+   >
+
+    <h3>
+     Upcoming
+    </h3>
+
+    <div class="admin-card">
+
+     <div class="admin-grid">
+
+      <div class="field full">
+
+       <label>
+        Title
+       </label>
+
+       <input id="upTitle">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Date & Time
+       </label>
+
+       <input
+        id="upDatetime"
+        type="datetime-local"
+       >
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Display Date
+       </label>
+
+       <input id="upDate">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Display Time
+       </label>
+
+       <input id="upTime">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Location
+       </label>
+
+       <input id="upLocation">
+
+      </div>
+
+      <div class="field full">
+
+       <label>
+        Description
+       </label>
+
+       <textarea id="upDescription"></textarea>
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="saveUpcoming"
+      >
+       Save Upcoming
+      </button>
+
+     </div>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        LIVE
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="livePanel"
+   >
+
+    <h3>
+     Live Show
+    </h3>
+
+    <div class="admin-card">
+
+     <div class="admin-grid">
+
+      <div class="field">
+
+       <label>
+        Live Button Text
+       </label>
+
+       <input id="liveButtonText">
+
+      </div>
+
+      <div class="field full">
+
+       <label>
+        Description
+       </label>
+
+       <textarea id="liveDescriptionInput"></textarea>
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="saveLive"
+      >
+       Save Live Settings
+      </button>
+
+     </div>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        TRAVEL
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="travelPanel"
+   >
+
+    <h3>
+     Travel
+    </h3>
+
+    <p class="admin-help">
+     Add travel destinations.
+    </p>
+
+    <div class="admin-card">
+
+     <div class="admin-grid">
+
+      <div class="field">
+
+       <label>
+        City
+       </label>
+
+       <input id="travelCity">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Country / Region
+       </label>
+
+       <input id="travelRegion">
+
+      </div>
+
+      <div class="field full">
+
+       <label>
+        Image URL
+       </label>
+
+       <input id="travelImage">
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="addTravel"
+      >
+       + Add Destination
+      </button>
+
+     </div>
+
+    </div>
+
+    <div id="adminTravelList"></div>
+
+   </section>
+
+
+   <!-- ===================================================
+        GALLERY
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="galleryPanel"
+   >
+
+    <h3>
+     Gallery
+    </h3>
+
+    <p class="admin-help">
+     Add image URLs to your gallery.
+    </p>
+
+    <div class="admin-card">
+
+     <div class="admin-grid">
+
+      <div class="field full">
+
+       <label>
+        Image URL
+       </label>
+
+       <input
+        id="galleryUrl"
+        placeholder="https://..."
+       >
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="addGallery"
+      >
+       + Add Photo
+      </button>
+
+     </div>
+
+    </div>
+
+    <div id="adminGalleryList"></div>
+
+   </section>
+
+
+   <!-- ===================================================
+        SOCIAL
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="socialPanel"
+   >
+
+    <h3>
+     Social
+    </h3>
+
+    <div class="admin-card">
+
+     <div class="admin-grid">
+
+      <div class="field">
+
+       <label>
+        Instagram Name
+       </label>
+
+       <input id="igName">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Instagram URL
+       </label>
+
+       <input id="igUrl">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        YouTube Name
+       </label>
+
+       <input id="ytName">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        YouTube URL
+       </label>
+
+       <input id="ytUrl">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Facebook Name
+       </label>
+
+       <input id="fbName">
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Facebook URL
+       </label>
+
+       <input id="fbUrl">
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="saveSocial"
+      >
+       Save Social
+      </button>
+
+     </div>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        TELEGRAM
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="telegramPanel"
+   >
+
+    <h3>
+     Telegram Connection
+    </h3>
+
+    <p class="admin-help">
+     Set the Telegram usernames used by Live and Member Joining.
+    </p>
+
+    <div class="admin-card">
+
+     <div class="admin-grid">
+
+      <div class="field">
+
+       <label>
+        Admin Telegram Username
+       </label>
+
+       <input
+        id="tgAdmin"
+        placeholder="@username"
+       >
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Live Telegram Username
+       </label>
+
+       <input
+        id="tgLive"
+        placeholder="@username"
+       >
+
+      </div>
+
+      <div class="field">
+
+       <label>
+        Booking Telegram Username
+       </label>
+
+       <input
+        id="tgBooking"
+        placeholder="@username"
+       >
+
+      </div>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="saveTelegram"
+      >
+       Save Telegram
+      </button>
+
+     </div>
+
+    </div>
+
+    <div class="admin-card">
+
+     <p
+      class="muted"
+      style="line-height:1.8"
+     >
+      Example:<br>
+      @samvini_admin<br><br>
+      The website opens Telegram with a prepared message.
+      The visitor still presses Send manually.
+     </p>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        LANGUAGE
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="languagePanel"
+   >
+
+    <h3>
+     Language
+    </h3>
+
+    <div class="admin-card">
+
+     <div class="field">
+
+      <label>
+       Website Language
+      </label>
+
+      <select id="languageSelect">
+
+       <option value="en">
+        English
+       </option>
+
+       <option value="hi">
+        Hindi
+       </option>
+
+      </select>
+
+     </div>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn primary"
+       id="saveLanguage"
+      >
+       Save Language
+      </button>
+
+     </div>
+
+    </div>
+
+   </section>
+
+
+   <!-- ===================================================
+        SETTINGS
+   =================================================== -->
+
+   <section
+    class="admin-section"
+    id="settingsPanel"
+   >
+
+    <h3>
+     Settings
+    </h3>
+
+    <div class="admin-card">
+
+     <h4>
+      Website Data
+     </h4>
+
+     <div class="admin-actions">
+
+      <button
+       class="btn"
+       id="saveAll"
+      >
+       Save Everything
+      </button>
+
+      <button
+       class="btn danger"
+       id="clearStorage"
+      >
+       Clear Local Data
+      </button>
+
+     </div>
+
+    </div>
+
+    <div class="admin-card">
+
+     <h4>
+      Important
+     </h4>
+
+     <p
+      class="muted"
+      style="line-height:1.8;margin-top:10px"
+     >
+      Photos, member requests and settings are stored in this
+      browser's localStorage. They are not automatically uploaded
+      to a cloud database. For a real multi-device admin system,
+      a backend such as Firebase or Supabase would be required.
+     </p>
+
+    </div>
+
+   </section>
+
+  </main>
+
+ </div>
+
+</div>
+
+
+<!-- =====================================================
+     ADMIN LOGIN
+===================================================== -->
+
+<div
+ class="modal"
+ id="loginModal"
+>
+
+ <div class="modal-box">
+
+  <div class="modal-head">
+
+   <h3>
+    Admin Access
+   </h3>
+
+   <button
+    class="close"
+    id="loginClose"
+   >
+    ×
+   </button>
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-bottom:12px"
+  >
+
+   <label>
+    Email
+   </label>
+
+   <input
+    id="loginEmail"
+    type="email"
+    placeholder="user ID"
+   >
+
+  </div>
+
+  <div class="field">
+
+   <label>
+    Password
+   </label>
+
+   <input
+    id="loginPassword"
+    type="password"
+    placeholder="Password"
+   >
+
+  </div>
+
+  <div class="admin-actions">
+
+   <button
+    class="btn primary"
+    id="loginBtn"
+   >
+    Login
+   </button>
+
+  </div>
+
+ </div>
+
+</div>
+
+
+<div id="toast"></div>
+
+
+<script>
+/* =========================================================
+   SAM VINI — COMPLETE SINGLE FILE SYSTEM V7
+========================================================= */
+
+const STORAGE_KEY="SAM_VINI_COMPLETE_V6";
+const AUTH_KEY="SAM_VINI_ADMIN_AUTH";
+
+const $=id=>document.getElementById(id);
+
+const DEFAULT_HERO_IMAGE=
+"https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&q=85";
+
+
+/* =========================================================
+   DEFAULT DATA
+========================================================= */
+
+const defaultData={
+
+ language:"en",
+
+ theme:{
+  name:"rose",
+  custom:false,
+  bg:"#09070a",
+  bg2:"#120c11",
+  accent:"#e7a6bd",
+  accent2:"#b96c8b",
+  text:"#f8f2f5"
+ },
+
+ festival:"off",
+
+ season:{
+  mode:"auto",
+  manual:"winter",
+  intensity:"medium",
+  effect:"on"
+ },
+
+ hero:{
+  kicker:"A STORY IN MOTION",
+  title:"SAM VINI",
+  description:
+   "A visual journal of lifestyle, travel, meetings and beautiful moments.",
+  image:DEFAULT_HERO_IMAGE,
+
+  /* NEW */
+  images:[
+   DEFAULT_HERO_IMAGE
+  ]
+ },
+
+ about:{
+  text:
+   "Every moment has a different energy. SAM VINI is a personal visual space built around lifestyle, creativity, travel and meaningful meetings.",
+  quote:
+   "Some stories are not written. They are experienced."
+ },
+
+ stats:{
+  one:"24",
+  two:"08",
+  three:"12",
+  four:"∞"
+ },
+
+ lifestyle:[
+
+  {
+   icon:"✦",
+   title:"Lifestyle",
+   text:"A balance of style, creativity and everyday moments."
+  },
+
+  {
+   icon:"◌",
+   title:"Creative Energy",
+   text:"Ideas, photographs and stories that keep moving."
+  },
+
+  {
+   icon:"♡",
+   title:"Good Moments",
+   text:"The small details that make a memory stay."
+  }
+
+ ],
+
+ achievements:[
+
+  {
+   year:"2024",
+   title:"A New Chapter",
+   description:
+    "A fresh beginning built around creativity and personal expression."
+  },
+
+  {
+   year:"2025",
+   title:"Growing Story",
+   description:
+    "More places, more people and more moments became part of the journey."
+  },
+
+  {
+   year:"2026",
+   title:"Story in Motion",
+   description:
+    "A new digital space bringing everything together."
+  }
+
+ ],
+
+ meetings:[
+
+  {
+   type:"Meeting",
+   title:"Jaipur Evening",
+   date:"2026-08-12",
+   time:"19:00",
+   location:"Jaipur, Rajasthan",
+   program:"Private Evening",
+   description:
+    "An evening of conversation, photographs and unforgettable memories."
+  },
+
+  {
+   type:"Event",
+   title:"City Lights",
+   date:"2026-09-05",
+   time:"20:00",
+   location:"Jaipur",
+   program:"Special Appearance",
+   description:
+    "A special evening surrounded by music, lights and good energy."
+  }
+
+ ],
+
+ bookings:[],
+
+ upcoming:{
+  title:"The next chapter.",
+  datetime:"2026-10-20T19:00",
+  date:"20 October 2026",
+  time:"07:00 PM",
+  location:"Jaipur, Rajasthan",
+  description:"The countdown has started."
+ },
+
+ live:{
+  button:"Join Live",
+  description:
+   "Live access and instructions are provided through Telegram."
+ },
+
+ travel:[
+
+  {
+   city:"Jaipur",
+   region:"Rajasthan",
+   image:
+    "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=900&q=80"
+  },
+
+  {
+   city:"Mumbai",
+   region:"India",
+   image:
+    "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=900&q=80"
+  },
+
+  {
+   city:"Varanasi",
+   region:"India",
+   image:
+    "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=900&q=80"
+  }
+
+ ],
+
+ gallery:[
+
+  "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=80",
+
+  "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80",
+
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"
+
+ ],
+
+ social:{
+
+  instagramName:"@samvini",
+  instagramUrl:"#",
+
+  youtubeName:"SAM VINI",
+  youtubeUrl:"#",
+
+  facebookName:"SAM VINI",
+  facebookUrl:"#"
+
+ },
+
+ telegram:{
+
+  admin:"samvini_admin",
+  live:"samvini_admin",
+  booking:"samvini_admin"
+
+ }
+
+};
+
+
+/* =========================================================
+   THEMES
+========================================================= */
+
+const themes={
+
+ rose:{
+  name:"Obsidian Rose",
+  bg:"#09070a",
+  bg2:"#120c11",
+  accent:"#e7a6bd",
+  accent2:"#b96c8b",
+  text:"#f8f2f5"
+ },
+
+ champagne:{
+  name:"Champagne",
+  bg:"#0b0907",
+  bg2:"#17120d",
+  accent:"#e5c58f",
+  accent2:"#b38b52",
+  text:"#faf5ea"
+ },
+
+ burgundy:{
+  name:"Burgundy",
+  bg:"#0c0508",
+  bg2:"#19080e",
+  accent:"#d66b88",
+  accent2:"#8e2948",
+  text:"#faeef2"
+ },
+
+ midnight:{
+  name:"Midnight",
+  bg:"#05070d",
+  bg2:"#0a1020",
+  accent:"#829eff",
+  accent2:"#4e65c2",
+  text:"#eef2ff"
+ },
+
+ emerald:{
+  name:"Emerald",
+  bg:"#050b09",
+  bg2:"#0b1712",
+  accent:"#87c9a1",
+  accent2:"#438866",
+  text:"#effbf3"
+ },
+
+ pearl:{
+  name:"Pearl",
+  bg:"#f4efed",
+  bg2:"#e9dedf",
+  accent:"#a85c78",
+  accent2:"#754052",
+  text:"#24171d"
+ },
+
+ sunset:{
+  name:"Sunset",
+  bg:"#100805",
+  bg2:"#21100a",
+  accent:"#ffad72",
+  accent2:"#d55d54",
+  text:"#fff3eb"
+ },
+
+ graphite:{
+  name:"Graphite",
+  bg:"#08090a",
+  bg2:"#121416",
+  accent:"#c2c7cc",
+  accent2:"#727b83",
+  text:"#f4f5f6"
+ }
+
+};
+
+
+/* =========================================================
+   FESTIVAL THEMES
+========================================================= */
+
+const festivals={
+
+ newyear:{
+  label:"🎆 New Year",
+  description:"Elegant midnight celebration",
+  cls:"theme-newyear"
+ },
+
+ valentine:{
+  label:"💗 Valentine's Day",
+  description:"Romantic pink atmosphere",
+  cls:"theme-valentine"
+ },
+
+ holi:{
+  label:"🌈 Holi",
+  description:"Colourful playful energy",
+  cls:"theme-holi"
+ },
+
+ earth:{
+  label:"🌿 Earth Day",
+  description:"Natural green atmosphere",
+  cls:"theme-earth"
+ },
+
+ summer:{
+  label:"☀️ Summer Special",
+  description:"Warm golden energy",
+  cls:"theme-summer"
+ },
+
+ monsoon:{
+  label:"🌧️ Monsoon Special",
+  description:"Rainy cinematic atmosphere",
+  cls:"theme-monsoon"
+ },
+
+ independence:{
+  label:"✨ Independence",
+  description:"Elegant tricolour-inspired glow",
+  cls:"theme-independence"
+ },
+
+ republic:{
+  label:"💠 Republic Special",
+  description:"Modern blue-gold atmosphere",
+  cls:"theme-republic"
+ },
+
+ halloween:{
+  label:"🎃 Halloween",
+  description:"Dark orange-purple mood",
+  cls:"theme-halloween"
+ },
+
+ christmas:{
+  label:"🎄 Christmas",
+  description:"Warm winter lights",
+  cls:"theme-christmas"
+ },
+
+ eve:{
+  label:"🥂 New Year's Eve",
+  description:"Midnight celebration",
+  cls:"theme-eve"
+ },
+
+ love:{
+  label:"♡ Love & Romance",
+  description:"Soft romantic atmosphere",
+  cls:"theme-love"
+ },
+
+ midnight:{
+  label:"🌙 Midnight",
+  description:"Deep night aesthetic",
+  cls:"theme-midnight"
+ },
+
+ springlove:{
+  label:"🌸 Spring Love",
+  description:"Soft spring atmosphere",
+  cls:"theme-springlove"
+ }
+
+};
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function clone(obj){
+ return JSON.parse(JSON.stringify(obj));
+}
+
+
+function merge(base,saved){
+
+ if(!saved){
+  return clone(base);
+ }
+
+ const result=clone(base);
+
+ function deep(target,source){
+
+  Object.keys(source||{}).forEach(key=>{
+
+   if(
+    source[key] &&
+    typeof source[key]==="object" &&
+    !Array.isArray(source[key])
+   ){
+
+    if(!target[key]){
+     target[key]={};
+    }
+
+    deep(target[key],source[key]);
+
+   }else{
+
+    target[key]=source[key];
+
+   }
+
+  });
+
+ }
+
+ deep(result,saved);
+
+ return result;
+}
+
+
+function loadData(){
+
+ try{
+
+  const raw=localStorage.getItem(STORAGE_KEY);
+
+  return raw
+   ? merge(defaultData,JSON.parse(raw))
+   : clone(defaultData);
+
+ }catch(e){
+
+  return clone(defaultData);
+
+ }
+
+}
+
+
+let data=loadData();
+
+
+/* Make sure old V6 data gets slideshow support */
+
+if(!data.hero){
+ data.hero=clone(defaultData.hero);
+}
+
+if(!Array.isArray(data.hero.images)){
+
+ if(data.hero.image){
+  data.hero.images=[data.hero.image];
+ }else{
+  data.hero.images=[DEFAULT_HERO_IMAGE];
+ }
+
+}
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function saveData(){
+
+ try{
+
+  localStorage.setItem(
+   STORAGE_KEY,
+   JSON.stringify(data)
+  );
+
+ }catch(e){
+
+  toast(
+   "Storage full — try smaller photos"
+  );
+
+ }
+
+}
+
+
+/* =========================================================
+   HTML SECURITY
+========================================================= */
+
+function escapeHTML(value){
+
+ return String(value??"")
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#039;");
+
+}
+
+
+function safeUrl(url){
+
+ const value=String(url||"").trim();
+
+ if(
+  value.startsWith("https://") ||
+  value.startsWith("http://") ||
+  value.startsWith("data:image/")
+ ){
+
+  return value;
+
+ }
+
+ return "";
+
+}
+
+
+function toast(message){
+
+ const t=$("toast");
+
+ if(!t)return;
+
+ t.textContent=message;
+
+ t.classList.add("show");
+
+ clearTimeout(window.__toast);
+
+ window.__toast=setTimeout(()=>{
+
+  t.classList.remove("show");
+
+ },2500);
+
+}
+
+
+/* =========================================================
+   TELEGRAM
+========================================================= */
+
+function telegramUsername(value){
+
+ return String(value||"")
+  .trim()
+  .replace(/^@/,"")
+  .replace(/^https?:\/\/t\.me\//,"")
+  .split("?")[0]
+  .replace(/\/$/,"");
+
+}
+
+
+function telegramUrl(username,text=""){
+
+ const user=telegramUsername(username);
+
+ if(!user){
+  return "https://t.me/";
+ }
+
+ const base="https://t.me/"+user;
+
+ return text
+  ? base+"?text="+encodeURIComponent(text)
+  : base;
+
+}
+
+
+/* =========================================================
+   IMAGE COMPRESSION
+========================================================= */
+
+function fileToDataURL(file,max=1400,quality=.78){
+
+ return new Promise((resolve,reject)=>{
+
+  const reader=new FileReader();
+
+  reader.onload=()=>{
+
+   const img=new Image();
+
+   img.onload=()=>{
+
+    let width=img.width;
+    let height=img.height;
+
+    if(width>max){
+
+     height=Math.round(
+      height*max/width
+     );
+
+     width=max;
+
+    }
+
+    const canvas=document.createElement("canvas");
+
+    canvas.width=width;
+    canvas.height=height;
+
+    const ctx=canvas.getContext("2d");
+
+    ctx.drawImage(
+     img,
+     0,
+     0,
+     width,
+     height
+    );
+
+    try{
+
+     resolve(
+      canvas.toDataURL(
+       "image/jpeg",
+       quality
+      )
+     );
+
+    }catch(error){
+
+     reject(error);
+
+    }
+
+   };
+
+   img.onerror=reject;
+
+   img.src=reader.result;
+
+  };
+
+  reader.onerror=reject;
+
+  reader.readAsDataURL(file);
+
+ });
+
+}
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function hexToRgba(hex,alpha=.3){
+
+ let h=String(hex||"").replace("#","");
+
+ if(h.length===3){
+  h=h.split("").map(x=>x+x).join("");
+ }
+
+ const r=parseInt(h.substring(0,2),16);
+ const g=parseInt(h.substring(2,4),16);
+ const b=parseInt(h.substring(4,6),16);
+
+ if([r,g,b].some(Number.isNaN)){
+  return "rgba(231,166,189,.3)";
+ }
+
+ return `rgba(${r},${g},${b},${alpha})`;
+
+}
+
+
+function applyBaseTheme(){
+
+ const root=document.documentElement;
+ const t=data.theme;
+
+ root.style.setProperty(
+  "--bg",
+  t.bg
+ );
+
+ root.style.setProperty(
+  "--bg2",
+  t.bg2
+ );
+
+ root.style.setProperty(
+  "--surface",
+  t.bg2
+ );
+
+ root.style.setProperty(
+  "--text",
+  t.text
+ );
+
+ root.style.setProperty(
+  "--accent",
+  t.accent
+ );
+
+ root.style.setProperty(
+  "--accent2",
+  t.accent2
+ );
+
+ root.style.setProperty(
+  "--glow",
+  hexToRgba(t.accent,.30)
+ );
+
+
+ if(t.name==="pearl"){
+
+  document.body.classList.add("light");
+
+ }else{
+
+  document.body.classList.remove("light");
+
+ }
+
+
+ document.body.classList.remove(
+
+  "theme-newyear",
+  "theme-valentine",
+  "theme-holi",
+  "theme-earth",
+  "theme-summer",
+  "theme-monsoon",
+  "theme-independence",
+  "theme-republic",
+  "theme-halloween",
+  "theme-christmas",
+  "theme-eve",
+  "theme-love",
+  "theme-midnight",
+  "theme-springlove"
+
+ );
+
+
+ if(
+  data.festival!=="off" &&
+  festivals[data.festival]
+ ){
+
+  document.body.classList.add(
+   festivals[data.festival].cls
+  );
+
+ }
+
+
+ const agePhoto=$("agePhoto");
+
+ if(agePhoto){
+
+  const image=safeUrl(
+   data.hero.image
+  );
+
+  if(image){
+
+   agePhoto.style.backgroundImage=
+    `url("${image}")`;
+
+  }
+
+ }
+
+}
+
+
+/* =========================================================
+   THEME GRID
+========================================================= */
+
+function renderThemeGrid(){
+
+ const box=$("themeGrid");
+
+ if(!box)return;
+
+ box.innerHTML="";
+
+ Object.keys(themes).forEach(key=>{
+
+  const t=themes[key];
+
+  const div=document.createElement("div");
+
+  div.className=
+   "theme-option"+
+   (data.theme.name===key?" active":"");
+
+  div.innerHTML=`
+
+   <div
+    class="theme-preview"
+    style="
+     background:linear-gradient(
+      135deg,
+      ${t.bg},
+      ${t.bg2}
+     );
+     border:1px solid ${t.accent};
+    "
+   ></div>
+
+   <b>
+    ${escapeHTML(t.name)}
+   </b>
+
+   <small>
+    ${key==="pearl"
+     ?"Light premium"
+     :"Dark premium"}
+   </small>
+
+  `;
+
+  div.onclick=()=>{
+
+   data.theme={
+
+    name:key,
+    custom:false,
+    bg:t.bg,
+    bg2:t.bg2,
+    accent:t.accent,
+    accent2:t.accent2,
+    text:t.text
+
+   };
+
+   saveData();
+
+   applyBaseTheme();
+
+   syncThemeInputs();
+
+   renderThemeGrid();
+
+   toast(
+    t.name+" applied"
+   );
+
+  };
+
+  box.appendChild(div);
+
+ });
+
+}
+
+
+function syncThemeInputs(){
+
+ if(!$("customBg"))return;
+
+ $("customBg").value=
+  data.theme.bg;
+
+ $("customBg2").value=
+  data.theme.bg2;
+
+ $("customAccent").value=
+  data.theme.accent;
+
+ $("customAccent2").value=
+  data.theme.accent2;
+
+}
+
+
+/* =========================================================
+   FESTIVAL
+========================================================= */
+
+function renderFestivalGrid(){
+
+ const box=$("festivalGrid");
+
+ if(!box)return;
+
+ box.innerHTML="";
+
+ Object.keys(festivals).forEach(key=>{
+
+  const f=festivals[key];
+
+  const div=document.createElement("div");
+
+  div.className=
+   "special"+
+   (data.festival===key?" active":"");
+
+  div.innerHTML=`
+
+   <b>
+    ${f.label}
+   </b>
+
+   <small>
+    ${f.description}
+   </small>
+
+  `;
+
+  div.onclick=()=>{
+
+   data.festival=key;
+
+   saveData();
+
+   applyBaseTheme();
+
+   renderFestivalGrid();
+
+   toast(
+    f.label+" applied"
+   );
+
+  };
+
+  box.appendChild(div);
+
+ });
+
+}
+
+
+/* =========================================================
+   SEASON
+========================================================= */
+
+function currentSeason(){
+
+ const month=new Date().getMonth()+1;
+
+ if(
+  month===11 ||
+  month===12 ||
+  month===1 ||
+  month===2
+ ){
+  return "winter";
+ }
+
+ if(
+  month===3 ||
+  month===4
+ ){
+  return "spring";
+ }
+
+ if(
+  month===5 ||
+  month===6
+ ){
+  return "summer";
+ }
+
+ return "monsoon";
+
+}
+
+
+function activeSeason(){
+
+ if(data.season.mode==="off"){
+  return "off";
+ }
+
+ if(data.season.mode==="manual"){
+  return data.season.manual;
+ }
+
+ return currentSeason();
+
+}
+
+
+/* =========================================================
+   EFFECTS
+========================================================= */
+
+function renderEffects(){
+
+ const box=$("effects");
+
+ if(!box)return;
+
+ box.innerHTML="";
+
+ if(data.season.effect!=="on"){
+  return;
+ }
+
+ const season=activeSeason();
+
+ if(season==="off"){
+  return;
+ }
+
+ let intensity=
+  data.season.intensity;
+
+ let count=
+  intensity==="low"
+   ?15
+   :intensity==="high"
+    ?65
+    :35;
+
+
+ if(season==="winter"){
+
+  for(let i=0;i<count;i++){
+
+   const e=
+    document.createElement("span");
+
+   e.className=
+    "effect snow";
+
+   e.style.left=
+    Math.random()*100+"%";
+
+   e.style.animationDuration=
+    (6+Math.random()*8)+"s";
+
+   e.style.animationDelay=
+    (-Math.random()*10)+"s";
+
+   e.style.setProperty(
+    "--drift",
+    (Math.random()*180-90)+"px"
+   );
+
+   box.appendChild(e);
+
+  }
+
+ }
+
+
+ if(season==="spring"){
+
+  for(let i=0;i<count;i++){
+
+   const e=
+    document.createElement("span");
+
+   e.className=
+    "effect "+
+    (
+     Math.random()>.45
+      ?"petal"
+      :"leaf"
+    );
+
+   e.style.left=
+    Math.random()*100+"%";
+
+   e.style.animationDuration=
+    (7+Math.random()*8)+"s";
+
+   e.style.animationDelay=
+    (-Math.random()*10)+"s";
+
+   e.style.setProperty(
+    "--drift",
+    (Math.random()*220-110)+"px"
+   );
+
+   box.appendChild(e);
+
+  }
+
+ }
+
+
+ if(season==="summer"){
+
+  for(
+   let i=0;
+   i<Math.max(5,count/6);
+   i++
+  ){
+
+   const e=
+    document.createElement("span");
+
+   e.className="heat";
+
+   e.style.left=
+    Math.random()*100+"%";
+
+   e.style.top=
+    Math.random()*80+"%";
+
+   e.style.animationDelay=
+    (-Math.random()*5)+"s";
+
+   box.appendChild(e);
+
+  }
+
+
+  for(let i=0;i<count;i++){
+
+   const e=
+    document.createElement("span");
+
+   e.className="effect";
+
+   e.style.width="2px";
+   e.style.height="2px";
+   e.style.borderRadius="50%";
+   e.style.background=
+    "var(--accent)";
+
+   e.style.left=
+    Math.random()*100+"%";
+
+   e.style.animationDuration=
+    (8+Math.random()*10)+"s";
+
+   e.style.animationDelay=
+    (-Math.random()*10)+"s";
+
+   e.style.setProperty(
+    "--drift",
+    (Math.random()*100-50)+"px"
+   );
+
+   box.appendChild(e);
+
+  }
+
+ }
+
+
+ if(season==="monsoon"){
+
+  for(let i=0;i<count;i++){
+
+   const e=
+    document.createElement("span");
+
+   e.className=
+    "effect rain";
+
+   e.style.left=
+    Math.random()*100+"%";
+
+   e.style.animationDuration=
+    (.7+Math.random()*.7)+"s";
+
+   e.style.animationDelay=
+    (-Math.random()*2)+"s";
+
+   box.appendChild(e);
+
+  }
+
+
+  for(let i=0;i<3;i++){
+
+   const c=
+    document.createElement("div");
+
+   c.className="cloud";
+
+   c.style.top=
+    (8+i*18)+"%";
+
+   c.style.animationDelay=
+    (-i*9)+"s";
+
+   box.appendChild(c);
+
+  }
+
+ }
+
+}
+
+
+function saveSeasonSettings(){
+
+ data.season.mode=
+  $("seasonMode").value;
+
+ data.season.manual=
+  $("manualSeason").value;
+
+ data.season.intensity=
+  $("animationIntensity").value;
+
+ data.season.effect=
+  $("seasonEffect").value;
+
+ saveData();
+
+ renderEffects();
+
+ toast(
+  "Seasonal settings saved"
+ );
+
+}
+
+
+/* =========================================================
+   HERO SLIDESHOW
+========================================================= */
+
+let heroSlideTimer=null;
+let heroSlideIndex=0;
+let heroParallaxY=0;
+let heroParallaxTarget=0;
+
+
+function getHeroPhotos(){
+
+ let photos=[];
+
+ if(
+  data.hero &&
+  Array.isArray(data.hero.images)
+ ){
+
+  photos=
+   data.hero.images
+    .filter(Boolean)
+    .map(safeUrl)
+    .filter(Boolean);
+
+ }
+
+ if(!photos.length){
+
+  const fallback=
+   safeUrl(data.hero?.image);
+
+  if(fallback){
+   photos=[fallback];
+  }
+
+ }
+
+ return photos;
+
+}
+
+
+/* =========================================================
+   RENDER HERO SLIDESHOW
+========================================================= */
+
+function renderHeroSlideshow(){
+
+ const box=
+  $("heroPhotoSlider");
+
+ if(!box)return;
+
+ clearInterval(heroSlideTimer);
+
+ heroSlideTimer=null;
+
+ box.innerHTML="";
+
+ heroSlideIndex=0;
+
+ const photos=
+  getHeroPhotos();
+
+ const counter=
+  $("heroPhotoCount");
+
+ if(counter){
+
+  counter.textContent=
+   photos.length>1
+    ?`01 / ${String(photos.length).padStart(2,"0")}`
+    :"";
+
+ }
+
+ if(!photos.length){
+
+  box.style.background=
+   "var(--bg)";
+
+  return;
+
+ }
+
+ box.style.background="";
+
+ photos.forEach(
+  (photo,index)=>{
+
+   const slide=
+    document.createElement("div");
+
+   slide.className=
+    "hero-slide";
+
+   slide.style.backgroundImage=
+    `url("${photo}")`;
+
+   if(index===0){
+
+    slide.classList.add(
+     "active"
+    );
+
+   }
+
+   box.appendChild(slide);
+
+  }
+ );
+
+
+ if(photos.length<=1){
+
+  return;
+
+ }
+
+
+ heroSlideTimer=
+  setInterval(()=>{
+
+   const slides=
+    box.querySelectorAll(
+     ".hero-slide"
+    );
+
+   if(!slides.length){
+    return;
+   }
+
+   slides.forEach(
+    slide=>{
+     slide.classList.remove(
+      "active",
+      "previous"
+     );
+    }
+   );
+
+   const oldIndex=
+    heroSlideIndex;
+
+   slides[oldIndex]
+    ?.classList.add("previous");
+
+   heroSlideIndex++;
+
+   if(
+    heroSlideIndex>=slides.length
+   ){
+
+    heroSlideIndex=0;
+
+   }
+
+   slides[heroSlideIndex]
+    ?.classList.add("active");
+
+
+   if(counter){
+
+    counter.textContent=
+     `${String(heroSlideIndex+1).padStart(2,"0")} / ${String(slides.length).padStart(2,"0")}`;
+
+   }
+
+  },1000);
+
+}
+
+
+/* =========================================================
+   HERO PARALLAX
+========================================================= */
+
+function updateHeroParallax(){
+
+ const hero=
+  document.querySelector(".hero");
+
+ const layer=
+  $("heroPhotoSlider");
+
+ if(!hero || !layer)return;
+
+ const rect=
+  hero.getBoundingClientRect();
+
+ const viewport=
+  window.innerHeight||1;
+
+ let progress=
+  (rect.top*-1)/Math.max(rect.height,1);
+
+ progress=
+  Math.max(
+   -1,
+   Math.min(1,progress)
+  );
+
+ heroParallaxTarget=
+  progress*35;
+
+ heroParallaxY +=
+  (heroParallaxTarget-heroParallaxY)*.08;
+
+ layer.style.transform=
+  `translate3d(0,${heroParallaxY}px,0) scale(1.02)`;
+
+ requestAnimationFrame(
+  updateHeroParallax
+ );
+
+}
+
+
+/* =========================================================
+   HERO PHOTO UPLOAD
+========================================================= */
+
+async function handleHeroPhotos(files){
+
+ if(!files || !files.length){
+  return;
+ }
+
+ if(files.length>5){
+
+  toast(
+   "Maximum 5 Hero Photos allowed"
+  );
+
+  return;
+
+ }
+
+ const photos=[];
+
+ try{
+
+  for(
+   const file of files
+  ){
+
+   if(!file.type.startsWith("image/")){
+    continue;
+   }
+
+   const compressed=
+    await fileToDataURL(
+     file,
+     1400,
+     .76
+    );
+
+   photos.push(compressed);
+
+  }
+
+  if(!photos.length){
+
+   toast(
+    "No valid images selected"
+   );
+
+   return;
+
+  }
+
+  data.hero.images=
+   photos;
+
+  data.hero.image=
+   photos[0];
+
+  saveData();
+
+  renderHeroPhotoPreview();
+
+  renderHeroSlideshow();
+
+  applyBaseTheme();
+
+  updateStorageInfo();
+
+  toast(
+   photos.length+
+   " Hero Photos Added"
+  );
+
+ }catch(error){
+
+  toast(
+   "Photo upload failed"
+  );
+
+ }
+
+}
+
+
+/* =========================================================
+   HERO PHOTO PREVIEW
+========================================================= */
+
+function renderHeroPhotoPreview(){
+
+ const box=
+  $("heroPhotosPreview");
+
+ if(!box)return;
+
+ const photos=
+  getHeroPhotos();
+
+ if(!photos.length){
+
+  box.innerHTML=`
+
+   <div class="hero-photo-empty">
+    No slideshow photos added yet.
+   </div>
+
+  `;
+
+  return;
+
+ }
+
+ box.innerHTML="";
+
+ photos.forEach(
+  (photo,index)=>{
+
+   const div=
+    document.createElement("div");
+
+   div.className=
+    "hero-photo-admin-item";
+
+   div.innerHTML=`
+
+    <img
+     src="${escapeHTML(photo)}"
+     alt="Hero ${index+1}"
+    >
+
+    <span class="hero-photo-number">
+     ${index+1}
+    </span>
+
+   `;
+
+   box.appendChild(div);
+
+  }
+ );
+
+}
+
+
+/* =========================================================
+   RENDER SITE
+========================================================= */
+
+function renderSite(){
+
+ $("heroKicker").textContent=
+  data.hero.kicker;
+
+ const title=
+  escapeHTML(
+   data.hero.title
+  );
+
+ const titleParts=
+  title.trim().split(/\s+/);
+
+ if(titleParts.length>=2){
+
+  const first=
+   titleParts.shift();
+
+  const rest=
+   titleParts.join(" ");
+
+  $("heroTitle").innerHTML=
+   `${first} <span>${rest}</span>`;
+
+ }else{
+
+  $("heroTitle").textContent=
+   title;
+
+ }
+
+ $("heroDescription").textContent=
+  data.hero.description;
+
+ $("aboutText").textContent=
+  data.about.text;
+
+ $("aboutQuote").textContent=
+  "“"+
+  data.about.quote+
+  "”";
+
+ $("stat1").textContent=
+  data.stats.one;
+
+ $("stat2").textContent=
+  data.stats.two;
+
+ $("stat3").textContent=
+  data.stats.three;
+
+ $("stat4").textContent=
+  data.stats.four;
+
+ renderHeroSlideshow();
+
+ renderLifestyle();
+
+ renderAchievements();
+
+ renderMeetings();
+
+ renderTravel();
+
+ renderGallery();
+
+ renderSocial();
+
+ $("upcomingTitle").textContent=
+  data.upcoming.title;
+
+ $("upcomingDescription").textContent=
+  data.upcoming.description;
+
+ $("upcomingMeta").textContent=
+  [
+   data.upcoming.date,
+   data.upcoming.time,
+   data.upcoming.location
+  ]
+  .filter(Boolean)
+  .join(" · ");
+
+ $("liveDescription").textContent=
+  data.live.description;
+
+ $("liveButton").textContent=
+  data.live.button;
+
+ applyBaseTheme();
+
+ renderEffects();
+
+ startCountdown();
+
+ observeReveals();
+
+}
+
+
+/* =========================================================
+   LIFESTYLE
+========================================================= */
+
+function renderLifestyle(){
+
+ const box=
+  $("lifestyleCards");
+
+ box.innerHTML="";
+
+ data.lifestyle.forEach(
+  item=>{
+
+   const div=
+    document.createElement("div");
+
+   div.className=
+    "card reveal";
+
+   div.innerHTML=`
+
+    <div class="card-icon">
+     ${escapeHTML(item.icon)}
+    </div>
+
+    <h3>
+     ${escapeHTML(item.title)}
+    </h3>
+
+    <p>
+     ${escapeHTML(item.text)}
+    </p>
+
+   `;
+
+   box.appendChild(div);
+
+  }
+ );
+
+}
+
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+function renderAchievements(){
+
+ const box=
+  $("achievementList");
+
+ box.innerHTML="";
+
+ data.achievements.forEach(
+  item=>{
+
+   const div=
+    document.createElement("div");
+
+   div.className=
+    "achievement reveal";
+
+   div.innerHTML=`
+
+    <b>
+     ${escapeHTML(item.year)}
+    </b>
+
+    <h3>
+     ${escapeHTML(item.title)}
+    </h3>
+
+    <p>
+     ${escapeHTML(item.description)}
+    </p>
+
+   `;
+
+   box.appendChild(div);
+
+  }
+ );
+
+ renderAdminAchievements();
+
+ updateDashboardStats();
+
+}
+
+
+/* =========================================================
+   MEETINGS
+========================================================= */
+
+function renderMeetings(){
+
+ const box=
+  $("meetingList");
+
+ box.innerHTML="";
+
+ data.meetings.forEach(
+  item=>{
+
+   let date="";
+
+   if(item.date){
+
+    const d=
+     new Date(
+      item.date+
+      "T00:00:00"
+     );
+
+    date=
+     d.toLocaleDateString(
+      data.language==="hi"
+       ?"hi-IN"
+       :"en-IN",
+      {
+       day:"numeric",
+       month:"long",
+       year:"numeric"
+      }
+     );
+
+   }
+
+   const div=
+    document.createElement("div");
+
+   div.className=
+    "meeting reveal";
+
+   div.innerHTML=`
+
+    <div class="meeting-type">
+     ${escapeHTML(item.type)}
+    </div>
+
+    <h3>
+     ${escapeHTML(item.title)}
+    </h3>
+
+    <div class="meeting-meta">
+
+     <span>
+      ${escapeHTML(date)}
+     </span>
+
+     <span>
+      ${escapeHTML(item.time)}
+     </span>
+
+     <span>
+      ${escapeHTML(item.location)}
+     </span>
+
+    </div>
+
+    <p>
+
+     <b>
+      ${escapeHTML(item.program)}
+     </b>
+
+     <br>
+
+     ${escapeHTML(item.description)}
+
+    </p>
+
+   `;
+
+   box.appendChild(div);
+
+  }
+ );
+
+ renderAdminMeetings();
+
+ updateDashboardStats();
+
+}
+
+
+/* =========================================================
+   TRAVEL
+========================================================= */
+
+function renderTravel(){
+
+ const box=
+  $("travelList");
+
+ box.innerHTML="";
+
+ data.travel.forEach(
+  item=>{
+
+   const div=
+    document.createElement("div");
+
+   div.className=
+    "travel reveal";
+
+   const image=
+    safeUrl(item.image);
+
+   if(image){
+
+    div.style.backgroundImage=
+     `url("${image}")`;
+
+   }
+
+   div.innerHTML=`
+
+    <div class="travel-info">
+
+     <small>
+      ${escapeHTML(item.region)}
+     </small>
+
+     <h3>
+      ${escapeHTML(item.city)}
+     </h3>
+
+    </div>
+
+   `;
+
+   box.appendChild(div);
+
+  }
+ );
+
+ renderAdminTravel();
+
+ updateDashboardStats();
+
+}
+
+
+/* =========================================================
+   GALLERY
+========================================================= */
+
+function renderGallery(){
+
+ const box=
+  $("galleryList");
+
+ box.innerHTML="";
+
+ data.gallery.forEach(
+  url=>{
+
+   const image=
+    safeUrl(url);
+
+   if(!image)return;
+
+   const div=
+    document.createElement("div");
+
+   div.className=
+    "gallery-item reveal";
+
+   div.innerHTML=`
+
+    <img
+     src="${escapeHTML(image)}"
+     alt="SAM VINI"
+    >
+
+   `;
+
+   box.appendChild(div);
+
+  }
+ );
+
+ renderAdminGallery();
+
+ updateDashboardStats();
+
+}
+
+
+/* =========================================================
+   SOCIAL
+========================================================= */
+
+function renderSocial(){
+
+ const box=
+  $("socialList");
+
+ box.innerHTML="";
+
+ const list=[
+
+  [
+   "Instagram",
+   data.social.instagramName,
+   data.social.instagramUrl
+  ],
+
+  [
+   "YouTube",
+   data.social.youtubeName,
+   data.social.youtubeUrl
+  ],
+
+  [
+   "Facebook",
+   data.social.facebookName,
+   data.social.facebookUrl
+  ]
+
+ ];
+
+ list.forEach(
+  item=>{
+
+   const a=
+    document.createElement("a");
+
+   a.href=
+    safeUrl(item[2])||"#";
+
+   a.target="_blank";
+
+   a.rel="noopener";
+
+   a.innerHTML=`
+
+    <small>
+     ${escapeHTML(item[0])}
+    </small>
+
+    <b>
+     ${escapeHTML(item[1])}
+    </b>
+
+   `;
+
+   box.appendChild(a);
+
+  }
+ );
+
+}
+
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+let countdownTimer=null;
+
+
+function startCountdown(){
+
+ clearInterval(
+  countdownTimer
+ );
+
+ function update(){
+
+  const target=
+   new Date(
+    data.upcoming.datetime
+   ).getTime();
+
+  const now=
+   Date.now();
+
+  let diff=
+   target-now;
+
+  if(
+   !Number.isFinite(target) ||
+   diff<=0
+  ){
+
+   $("cdDays").textContent="00";
+   $("cdHours").textContent="00";
+   $("cdMinutes").textContent="00";
+   $("cdSeconds").textContent="00";
+
+   return;
+
+  }
+
+  const days=
+   Math.floor(
+    diff/86400000
+   );
+
+  diff%=86400000;
+
+  const hours=
+   Math.floor(
+    diff/3600000
+   );
+
+  diff%=3600000;
+
+  const mins=
+   Math.floor(
+    diff/60000
+   );
+
+  const secs=
+   Math.floor(
+    (diff%60000)/1000
+   );
+
+  $("cdDays").textContent=
+   String(days).padStart(2,"0");
+
+  $("cdHours").textContent=
+   String(hours).padStart(2,"0");
+
+  $("cdMinutes").textContent=
+   String(mins).padStart(2,"0");
+
+  $("cdSeconds").textContent=
+   String(secs).padStart(2,"0");
+
+ }
+
+ update();
+
+ countdownTimer=
+  setInterval(
+   update,
+   1000
+  );
+
+}
+
+
+/* =========================================================
+   REVEAL
+========================================================= */
+
+function observeReveals(){
+
+ const items=
+  document.querySelectorAll(
+   ".reveal"
+  );
+
+ if(
+  !("IntersectionObserver" in window)
+ ){
+
+  items.forEach(
+   x=>x.classList.add(
+    "visible"
+   )
+  );
+
+  return;
+
+ }
+
+ const observer=
+  new IntersectionObserver(
+   entries=>{
+
+    entries.forEach(
+     entry=>{
+
+      if(entry.isIntersecting){
+
+       entry.target.classList.add(
+        "visible"
+       );
+
+       observer.unobserve(
+        entry.target
+       );
+
+      }
+
+     }
+    );
+
+   },
+   {
+    threshold:.12
+   }
+  );
+
+ items.forEach(
+  item=>{
+
+   if(
+    !item.classList.contains(
+     "visible"
+    )
+   ){
+
+    observer.observe(item);
+
+   }
+
+  }
+ );
+
+}
+
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+function openAdmin(){
+
+ if(
+  localStorage.getItem(
+   AUTH_KEY
+  )==="1"
+ ){
+
+  $("admin").classList.add(
+   "open"
+  );
+
+  populateAdmin();
+
+ }else{
+
+  $("loginModal").classList.add(
+   "show"
+  );
+
+ }
+
+}
+
+
+function closeAdmin(){
+
+ $("admin").classList.remove(
+  "open"
+ );
+
+}
+
+
+function populateAdmin(){
+
+ renderThemeGrid();
+
+ renderFestivalGrid();
+
+ syncThemeInputs();
+
+
+ $("seasonMode").value=
+  data.season.mode;
+
+ $("manualSeason").value=
+  data.season.manual;
+
+ $("animationIntensity").value=
+  data.season.intensity;
+
+ $("seasonEffect").value=
+  data.season.effect;
+
+
+ $("heroKickerInput").value=
+  data.hero.kicker;
+
+ $("heroTitleInput").value=
+  data.hero.title;
+
+ $("heroDescriptionInput").value=
+  data.hero.description;
+
+
+ $("aboutTextInput").value=
+  data.about.text;
+
+ $("aboutQuoteInput").value=
+  data.about.quote;
+
+
+ $("stat1Input").value=
+  data.stats.one;
+
+ $("stat2Input").value=
+  data.stats.two;
+
+ $("stat3Input").value=
+  data.stats.three;
+
+ $("stat4Input").value=
+  data.stats.four;
+
+
+ data.lifestyle.forEach(
+  (item,i)=>{
+
+   const n=i+1;
+
+   if($("life"+n+"Title")){
+
+    $("life"+n+"Title").value=
+     item.title;
+
+   }
+
+   if($("life"+n+"Text")){
+
+    $("life"+n+"Text").value=
+     item.text;
+
+   }
+
+  }
+ );
+
+
+ $("adminPhotoPreview").src=
+  safeUrl(data.hero.image)||
+  DEFAULT_HERO_IMAGE;
+
+
+ renderHeroPhotoPreview();
+
+
+ $("upTitle").value=
+  data.upcoming.title;
+
+ $("upDatetime").value=
+  data.upcoming.datetime;
+
+ $("upDate").value=
+  data.upcoming.date;
+
+ $("upTime").value=
+  data.upcoming.time;
+
+ $("upLocation").value=
+  data.upcoming.location;
+
+ $("upDescription").value=
+  data.upcoming.description;
+
+
+ $("liveButtonText").value=
+  data.live.button;
+
+ $("liveDescriptionInput").value=
+  data.live.description;
+
+
+ $("igName").value=
+  data.social.instagramName;
+
+ $("igUrl").value=
+  data.social.instagramUrl;
+
+ $("ytName").value=
+  data.social.youtubeName;
+
+ $("ytUrl").value=
+  data.social.youtubeUrl;
+
+ $("fbName").value=
+  data.social.facebookName;
+
+ $("fbUrl").value=
+  data.social.facebookUrl;
+
+
+ $("tgAdmin").value=
+  data.telegram.admin;
+
+ $("tgLive").value=
+  data.telegram.live;
+
+ $("tgBooking").value=
+  data.telegram.booking;
+
+
+ $("languageSelect").value=
+  data.language;
+
+
+ renderAdminAchievements();
+
+ renderAdminMeetings();
+
+ renderAdminTravel();
+
+ renderAdminGallery();
+
+ renderAdminBookings();
+
+ updateDashboardStats();
+
+ updateStorageInfo();
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function updateDashboardStats(){
+
+ $("dashAchievements").textContent=
+  data.achievements.length;
+
+ $("dashMeetings").textContent=
+  data.meetings.length;
+
+ $("dashTravel").textContent=
+  data.travel.length;
+
+ $("dashGallery").textContent=
+  data.gallery.length;
+
+}
+
+
+function updateStorageInfo(){
+
+ let bytes=0;
+
+ try{
+
+  bytes=
+   new Blob([
+    localStorage.getItem(
+     STORAGE_KEY
+    )||""
+   ]).size;
+
+ }catch(e){}
+
+ const kb=
+  (bytes/1024).toFixed(1);
+
+ $("storageInfo").textContent=
+  `Local storage used by SAM VINI: ${kb} KB`;
+
+}
+
+
+/* =========================================================
+   ADMIN NAVIGATION
+========================================================= */
+
+document
+ .querySelectorAll(
+  ".side-menu button"
+ )
+ .forEach(
+  btn=>{
+
+   btn.addEventListener(
+    "click",
+    ()=>{
+
+     document
+      .querySelectorAll(
+       ".side-menu button"
+      )
+      .forEach(
+       x=>
+        x.classList.remove(
+         "active"
+        )
+      );
+
+     btn.classList.add(
+      "active"
+     );
+
+     document
+      .querySelectorAll(
+       ".admin-section"
+      )
+      .forEach(
+       x=>
+        x.classList.remove(
+         "active"
+        )
+      );
+
+     const panel=
+      $(btn.dataset.panel);
+
+     if(panel){
+
+      panel.classList.add(
+       "active"
+      );
+
+     }
+
+     $("sidebar")
+      .classList.remove(
+       "mobile-open"
+      );
+
+    }
+   );
+
+  }
+ );
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+$("adminOpen").onclick=
+ openAdmin;
+
+
+$("loginClose").onclick=()=>{
+
+ $("loginModal")
+  .classList.remove(
+   "show"
+  );
+
+};
+
+
+$("loginBtn").onclick=()=>{
+
+ const email=
+  $("loginEmail")
+   .value
+   .trim();
+
+ const pass=
+  $("loginPassword")
+   .value;
+
+ if(
+  email==="admin@samvini.com" &&
+  pass==="SAMVINI2026"
+ ){
+
+  localStorage.setItem(
+   AUTH_KEY,
+   "1"
+  );
+
+  $("loginModal")
+   .classList.remove(
+    "show"
+   );
+
+  $("admin")
+   .classList.add(
+    "open"
+   );
+
+  populateAdmin();
+
+  toast(
+   "Admin access granted"
+  );
+
+ }else{
+
+  toast(
+   "Incorrect email or password"
+  );
+
+ }
+
+};
+
+
+$("adminClose").onclick=
+ closeAdmin;
+
+
+/* =========================================================
+   CUSTOM THEME
+========================================================= */
+
+$("applyCustom").onclick=()=>{
+
+ data.theme={
+
+  name:"custom",
+  custom:true,
+
+  bg:
+   $("customBg").value,
+
+  bg2:
+   $("customBg2").value,
+
+  accent:
+   $("customAccent").value,
+
+  accent2:
+   $("customAccent2").value,
+
+  text:"#f8f2f5"
+
+ };
+
+ saveData();
+
+ applyBaseTheme();
+
+ renderThemeGrid();
+
+ toast(
+  "Custom theme applied"
+ );
+
+};
+
+
+$("festivalOff").onclick=()=>{
+
+ data.festival="off";
+
+ saveData();
+
+ applyBaseTheme();
+
+ renderFestivalGrid();
+
+ toast(
+  "Festival theme OFF"
+ );
+
+};
+
+
+/* =========================================================
+   SEASON CONTROLS
+========================================================= */
+
+$("saveSeason").onclick=
+ saveSeasonSettings;
+
+
+$("seasonOff").onclick=()=>{
+
+ data.season.mode="off";
+
+ saveData();
+
+ $("seasonMode").value=
+  "off";
+
+ renderEffects();
+
+ toast(
+  "Seasonal effects OFF"
+ );
+
+};
+
+
+/* =========================================================
+   HERO TEXT
+========================================================= */
+
+$("saveHero").onclick=()=>{
+
+ data.hero.kicker=
+  $("heroKickerInput")
+   .value
+   .trim();
+
+ data.hero.title=
+  $("heroTitleInput")
+   .value
+   .trim();
+
+ data.hero.description=
+  $("heroDescriptionInput")
+   .value
+   .trim();
+
+ saveData();
+
+ renderSite();
+
+ populateAdmin();
+
+ toast(
+  "Hero saved"
+ );
+
+};
+
+
+/* =========================================================
+   HERO MULTI PHOTO
+========================================================= */
+
+const heroPhotosInput=
+ $("heroPhotosInput");
+
+
+if(heroPhotosInput){
+
+ heroPhotosInput.addEventListener(
+  "change",
+  async e=>{
+
+   const files=
+    [...e.target.files];
+
+   await handleHeroPhotos(
+    files
+   );
+
+   e.target.value="";
+
+  }
+ );
+
+}
+
+
+$("removeHeroSlideshow").onclick=()=>{
+
+ const fallback=
+  safeUrl(
+   data.hero.image
+  )||
+  DEFAULT_HERO_IMAGE;
+
+ data.hero.images=
+  [fallback];
+
+ saveData();
+
+ renderHeroPhotoPreview();
+
+ renderHeroSlideshow();
+
+ updateStorageInfo();
+
+ toast(
+  "Slideshow photos removed"
+ );
+
+};
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+$("saveContent").onclick=()=>{
+
+ data.about.text=
+  $("aboutTextInput").value;
+
+ data.about.quote=
+  $("aboutQuoteInput").value;
+
+ data.stats.one=
+  $("stat1Input").value;
+
+ data.stats.two=
+  $("stat2Input").value;
+
+ data.stats.three=
+  $("stat3Input").value;
+
+ data.stats.four=
+  $("stat4Input").value;
+
+ saveData();
+
+ renderSite();
+
+ toast(
+  "Content saved"
+ );
+
+};
+
+
+$("saveLifestyle").onclick=()=>{
+
+ for(let i=0;i<3;i++){
+
+  data.lifestyle[i].title=
+   $("life"+(i+1)+"Title")
+    .value;
+
+  data.lifestyle[i].text=
+   $("life"+(i+1)+"Text")
+    .value;
+
+ }
+
+ saveData();
+
+ renderSite();
+
+ toast(
+  "Lifestyle saved"
+ );
+
+};
+
+
+/* =========================================================
+   PHOTO STUDIO
+========================================================= */
+
+$("heroPhotoInput")
+ .addEventListener(
+  "change",
+  e=>{
+
+   const file=
+    e.target.files[0];
+
+   if(!file)return;
+
+   fileToDataURL(
+    file,
+    1600,
+    .82
+   )
+   .then(
+    compressed=>{
+
+     data.hero.image=
+      compressed;
+
+     /*
+       If slideshow doesn't exist,
+       also use this as slideshow
+     */
+
+     if(
+      !Array.isArray(
+       data.hero.images
+      ) ||
+      data.hero.images.length<=1
+     ){
+
+      data.hero.images=
+       [compressed];
+
+     }
+
+     saveData();
+
+     $("adminPhotoPreview").src=
+      compressed;
+
+     renderHeroPhotoPreview();
+
+     renderSite();
+
+     updateStorageInfo();
+
+     toast(
+      "Hero photo replaced"
+     );
+
+    }
+   )
+   .catch(
+    ()=>{
+
+     toast(
+      "Photo processing failed"
+     );
+
+    }
+   );
+
+  }
+ );
+
+
+$("removeHeroPhoto").onclick=()=>{
+
+ data.hero.image="";
+
+ data.hero.images=[];
+
+ saveData();
+
+ $("adminPhotoPreview").src="";
+
+ renderHeroPhotoPreview();
+
+ renderHeroSlideshow();
+
+ updateStorageInfo();
+
+ toast(
+  "Hero photo removed"
+ );
+
+};
+
+
+/* =========================================================
+   ACHIEVEMENTS ADMIN
+========================================================= */
+
+function renderAdminAchievements(){
+
+ const box=
+  $("adminAchievementList");
+
+ box.innerHTML="";
+
+ data.achievements.forEach(
+  (item,index)=>{
+
+   const row=
+    document.createElement("div");
+
+   row.className=
+    "list-row";
+
+   row.innerHTML=`
+
+    <div>
+
+     <b>
+      ${escapeHTML(item.title)}
+     </b>
+
+     <small>
+      ${escapeHTML(item.year)}
+     </small>
+
+    </div>
+
+    <div class="list-actions">
+
+     <button
+      class="btn small danger"
+      data-delete-ach="${index}"
+     >
+      Delete
+     </button>
+
+    </div>
+
+   `;
+
+   box.appendChild(row);
+
+  }
+ );
+
+
+ box
+  .querySelectorAll(
+   "[data-delete-ach]"
+  )
+  .forEach(
+   btn=>{
+
+    btn.onclick=()=>{
+
+     data.achievements.splice(
+      Number(
+       btn.dataset.deleteAch
+      ),
+      1
+     );
+
+     saveData();
+
+     renderSite();
+
+     populateAdmin();
+
+     toast(
+      "Achievement deleted"
+     );
+
+    };
+
+   }
+  );
+
+}
+
+
+$("addAchievement").onclick=()=>{
+
+ const title=
+  $("achTitle")
+   .value
+   .trim();
+
+ if(!title){
+
+  toast(
+   "Enter achievement title"
+  );
+
+  return;
+
+ }
+
+ data.achievements.push({
+
+  year:
+   $("achYear")
+    .value
+    .trim()||
+   new Date()
+    .getFullYear(),
+
+  title:title,
+
+  description:
+   $("achDescription")
+    .value
+    .trim()
+
+ });
+
+ saveData();
+
+ $("achYear").value="";
+ $("achTitle").value="";
+ $("achDescription").value="";
+
+ renderSite();
+
+ populateAdmin();
+
+ toast(
+  "Achievement added"
+ );
+
+};
+
+
+/* =========================================================
+   MEETINGS ADMIN
+========================================================= */
+
+function renderAdminMeetings(){
+
+ const box=
+  $("adminMeetingList");
+
+ box.innerHTML="";
+
+ data.meetings.forEach(
+  (item,index)=>{
+
+   const row=
+    document.createElement("div");
+
+   row.className=
+    "list-row";
+
+   row.innerHTML=`
+
+    <div>
+
+     <b>
+      ${escapeHTML(item.title)}
+     </b>
+
+     <small>
+      ${escapeHTML(item.type)}
+      ·
+      ${escapeHTML(item.date)}
+     </small>
+
+    </div>
+
+    <div class="list-actions">
+
+     <button
+      class="btn small danger"
+      data-delete-meeting="${index}"
+     >
+      Delete
+     </button>
+
+    </div>
+
+   `;
+
+   box.appendChild(row);
+
+  }
+ );
+
+
+ box
+  .querySelectorAll(
+   "[data-delete-meeting]"
+  )
+  .forEach(
+   btn=>{
+
+    btn.onclick=()=>{
+
+     data.meetings.splice(
+      Number(
+       btn.dataset.deleteMeeting
+      ),
+      1
+     );
+
+     saveData();
+
+     renderSite();
+
+     populateAdmin();
+
+     toast(
+      "Meeting deleted"
+     );
+
+    };
+
+   }
+  );
+
+}
+
+
+$("addMeeting").onclick=()=>{
+
+ const title=
+  $("meetingTitle")
+   .value
+   .trim();
+
+ if(!title){
+
+  toast(
+   "Enter meeting title"
+  );
+
+  return;
+
+ }
+
+ data.meetings.push({
+
+  type:
+   $("meetingType").value,
+
+  title:title,
+
+  date:
+   $("meetingDate").value,
+
+  time:
+   $("meetingTime").value,
+
+  location:
+   $("meetingLocation").value,
+
+  program:
+   $("meetingProgram").value,
+
+  description:
+   $("meetingDescription").value
+
+ });
+
+ saveData();
+
+ [
+  "meetingTitle",
+  "meetingDate",
+  "meetingTime",
+  "meetingLocation",
+  "meetingProgram",
+  "meetingDescription"
+ ]
+ .forEach(
+  id=>$(id).value=""
+ );
+
+ renderSite();
+
+ populateAdmin();
+
+ toast(
+  "Meeting added"
+ );
+
+};
+
+
+/* =========================================================
+   UPCOMING
+========================================================= */
+
+$("saveUpcoming").onclick=()=>{
+
+ data.upcoming={
+
+  title:
+   $("upTitle").value,
+
+  datetime:
+   $("upDatetime").value,
+
+  date:
+   $("upDate").value,
+
+  time:
+   $("upTime").value,
+
+  location:
+   $("upLocation").value,
+
+  description:
+   $("upDescription").value
+
+ };
+
+ saveData();
+
+ renderSite();
+
+ toast(
+  "Upcoming event saved"
+ );
+
+};
+
+
+/* =========================================================
+   LIVE
+========================================================= */
+
+$("saveLive").onclick=()=>{
+
+ data.live.button=
+  $("liveButtonText").value||
+  "Join Live";
+
+ data.live.description=
+  $("liveDescriptionInput").value;
+
+ saveData();
+
+ renderSite();
+
+ toast(
+  "Live settings saved"
+ );
+
+};
+
+
+$("liveButton").onclick=()=>{
+
+ const user=
+  data.telegram.live||
+  data.telegram.admin;
+
+ if(
+  !telegramUsername(user)
+ ){
+
+  toast(
+   "Set Live Telegram username in Admin"
+  );
+
+  return;
+
+ }
+
+ window.open(
+  telegramUrl(user),
+  "_blank"
+ );
+
+};
+
+
+/* =========================================================
+   TRAVEL
+========================================================= */
+
+function renderAdminTravel(){
+
+ const box=
+  $("adminTravelList");
+
+ box.innerHTML="";
+
+ data.travel.forEach(
+  (item,index)=>{
+
+   const row=
+    document.createElement("div");
+
+   row.className=
+    "list-row";
+
+   row.innerHTML=`
+
+    <div>
+
+     <b>
+      ${escapeHTML(item.city)}
+     </b>
+
+     <small>
+      ${escapeHTML(item.region)}
+     </small>
+
+    </div>
+
+    <div class="list-actions">
+
+     <button
+      class="btn small danger"
+      data-delete-travel="${index}"
+     >
+      Delete
+     </button>
+
+    </div>
+
+   `;
+
+   box.appendChild(row);
+
+  }
+ );
+
+
+ box
+  .querySelectorAll(
+   "[data-delete-travel]"
+  )
+  .forEach(
+   btn=>{
+
+    btn.onclick=()=>{
+
+     data.travel.splice(
+      Number(
+       btn.dataset.deleteTravel
+      ),
+      1
+     );
+
+     saveData();
+
+     renderSite();
+
+     populateAdmin();
+
+     toast(
+      "Destination deleted"
+     );
+
+    };
+
+   }
+  );
+
+}
+
+
+$("addTravel").onclick=()=>{
+
+ const city=
+  $("travelCity")
+   .value
+   .trim();
+
+ if(!city){
+
+  toast(
+   "Enter city"
+  );
+
+  return;
+
+ }
+
+ data.travel.push({
+
+  city:city,
+
+  region:
+   $("travelRegion").value,
+
+  image:
+   $("travelImage").value
+
+ });
+
+ saveData();
+
+ $("travelCity").value="";
+ $("travelRegion").value="";
+ $("travelImage").value="";
+
+ renderSite();
+
+ populateAdmin();
+
+ toast(
+  "Destination added"
+ );
+
+};
+
+
+/* =========================================================
+   GALLERY
+========================================================= */
+
+function renderAdminGallery(){
+
+ const box=
+  $("adminGalleryList");
+
+ box.innerHTML="";
+
+ data.gallery.forEach(
+  (url,index)=>{
+
+   const row=
+    document.createElement("div");
+
+   row.className=
+    "list-row";
+
+   row.innerHTML=`
+
+    <div
+     style="
+      max-width:70%;
+      overflow:hidden
+     "
+    >
+
+     <small>
+      ${escapeHTML(url)}
+     </small>
+
+    </div>
+
+    <div class="list-actions">
+
+     <button
+      class="btn small danger"
+      data-delete-gallery="${index}"
+     >
+      Delete
+     </button>
+
+    </div>
+
+   `;
+
+   box.appendChild(row);
+
+  }
+ );
+
+
+ box
+  .querySelectorAll(
+   "[data-delete-gallery]"
+  )
+  .forEach(
+   btn=>{
+
+    btn.onclick=()=>{
+
+     data.gallery.splice(
+      Number(
+       btn.dataset.deleteGallery
+      ),
+      1
+     );
+
+     saveData();
+
+     renderSite();
+
+     populateAdmin();
+
+     toast(
+      "Photo deleted"
+     );
+
+    };
+
+   }
+  );
+
+}
+
+
+$("addGallery").onclick=()=>{
+
+ const url=
+  $("galleryUrl")
+   .value
+   .trim();
+
+ if(!safeUrl(url)){
+
+  toast(
+   "Enter a valid image URL"
+  );
+
+  return;
+
+ }
+
+ data.gallery.push(url);
+
+ saveData();
+
+ $("galleryUrl").value="";
+
+ renderSite();
+
+ populateAdmin();
+
+ toast(
+  "Photo added"
+ );
+
+};
+
+
+/* =========================================================
+   SOCIAL
+========================================================= */
+
+$("saveSocial").onclick=()=>{
+
+ data.social={
+
+  instagramName:
+   $("igName").value,
+
+  instagramUrl:
+   $("igUrl").value,
+
+  youtubeName:
+   $("ytName").value,
+
+  youtubeUrl:
+   $("ytUrl").value,
+
+  facebookName:
+   $("fbName").value,
+
+  facebookUrl:
+   $("fbUrl").value
+
+ };
+
+ saveData();
+
+ renderSite();
+
+ toast(
+  "Social links saved"
+ );
+
+};
+
+
+/* =========================================================
+   TELEGRAM
+========================================================= */
+
+$("saveTelegram").onclick=()=>{
+
+ data.telegram.admin=
+  telegramUsername(
+   $("tgAdmin").value
+  );
+
+ data.telegram.live=
+  telegramUsername(
+   $("tgLive").value
+  );
+
+ data.telegram.booking=
+  telegramUsername(
+   $("tgBooking").value
+  );
+
+ saveData();
+
+ toast(
+  "Telegram connection saved"
+ );
+
+};
+
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+$("saveLanguage").onclick=()=>{
+
+ data.language=
+  $("languageSelect").value;
+
+ saveData();
+
+ if(
+  data.language==="hi"
+ ){
+
+  $("languageBtn").textContent=
+   "English";
+
+ }else{
+
+  $("languageBtn").textContent=
+   "हिन्दी";
+
+ }
+
+ toast(
+
+  data.language==="hi"
+   ?"Language set to Hindi"
+   :"Language set to English"
+
+ );
+
+};
+
+
+$("languageBtn").onclick=()=>{
+
+ data.language=
+  data.language==="en"
+   ?"hi"
+   :"en";
+
+ saveData();
+
+ $("languageSelect").value=
+  data.language;
+
+ $("languageBtn").textContent=
+  data.language==="hi"
+   ?"English"
+   :"हिन्दी";
+
+ toast(
+
+  data.language==="hi"
+   ?"Hindi selected"
+   :"English selected"
+
+ );
+
+};
+
+
+/* =========================================================
+   BOOKINGS / JOINING
+========================================================= */
+
+function bookingId(){
+
+ return "SV-"+
+  Date.now()
+   .toString(36)
+   .toUpperCase();
+
+}
+
+
+function openBooking(){
+
+ $("bookingModal")
+  .classList.add(
+   "show"
+  );
+
+ $("bookName").focus();
+
+}
+
+
+function closeBooking(){
+
+ $("bookingModal")
+  .classList.remove(
+   "show"
+  );
+
+}
+
+
+$("heroBook").onclick=
+ openBooking;
+
+
+$("bookingClose").onclick=
+ closeBooking;
+
+
+$("cancelBooking").onclick=
+ closeBooking;
+
+
+$("submitBooking").onclick=()=>{
+
+ const name=
+  $("bookName")
+   .value
+   .trim();
+
+ const age=
+  $("bookAge")
+   .value
+   .trim();
+
+ const gender=
+  $("bookGender").value;
+
+ const address=
+  $("bookAddress")
+   .value
+   .trim();
+
+
+ if(
+  !name||
+  !age||
+  !gender||
+  !address
+ ){
+
+  toast(
+   "Please complete all four fields"
+  );
+
+  return;
+
+ }
+
+
+ const id=
+  bookingId();
+
+
+ const booking={
+
+  id:id,
+
+  name:name,
+
+  age:age,
+
+  gender:gender,
+
+  address:address,
+
+  status:"Pending",
+
+  created:
+   new Date()
+    .toISOString()
+
+ };
+
+
+ data.bookings.unshift(
+  booking
+ );
+
+ saveData();
+
+
+ const message=
+`SAM VINI — New member
+
+Members ID: ${id}
+
+Name: ${name}
+Age: ${age}
+Gender: ${gender}
+Address: ${address}
+
+Status: Pending
+
+Please review this Member.`;
+
+
+ const username=
+  data.telegram.booking||
+  data.telegram.admin;
+
+
+ if(
+  !telegramUsername(username)
+ ){
+
+  toast(
+   "Set Booking Telegram username in Admin"
+  );
+
+  closeBooking();
+
+  populateAdmin();
+
+  return;
+
+ }
+
+
+ renderAdminBookings();
+
+ updateDashboardStats();
+
+
+ const url=
+  telegramUrl(
+   username,
+   message
+  );
+
+
+ window.open(
+  url,
+  "_blank"
+ );
+
+
+ closeBooking();
+
+
+ $("bookName").value="";
+ $("bookAge").value="";
+ $("bookGender").value="";
+ $("bookAddress").value="";
+
+
+ toast(
+  "Joining request created: "+
+  id
+ );
+
+};
+
+
+function renderAdminBookings(){
+
+ const box=
+  $("adminBookingList");
+
+ if(!box)return;
+
+ box.innerHTML="";
+
+
+ if(
+  !data.bookings.length
+ ){
+
+  box.innerHTML=`
+
+   <div class="admin-card">
+
+    <p class="muted">
+     No member requests yet.
+    </p>
+
+   </div>
+
+  `;
+
+  return;
+
+ }
+
+
+ data.bookings.forEach(
+  (item,index)=>{
+
+   const row=
+    document.createElement("div");
+
+   row.className=
+    "list-row";
+
+   row.innerHTML=`
+
+    <div style="min-width:0">
+
+     <b>
+      ${escapeHTML(item.name)}
+     </b>
+
+     <small>
+      ${escapeHTML(item.id)}
+      ·
+      ${escapeHTML(item.gender)}
+      ·
+      ${escapeHTML(item.age)}
+      years
+     </small>
+
+     <small>
+      ${escapeHTML(item.address)}
+     </small>
+
+    </div>
+
+    <div class="list-actions">
+
+     <span
+      class="status ${escapeHTML(item.status)}"
+     >
+      ${escapeHTML(item.status)}
+     </span>
+
+     <button
+      class="btn small"
+      data-confirm-book="${index}"
+     >
+      Confirm
+     </button>
+
+     <button
+      class="btn small"
+      data-cancel-book="${index}"
+     >
+      Cancel
+     </button>
+
+     <button
+      class="btn small danger"
+      data-delete-book="${index}"
+     >
+      Delete
+     </button>
+
+    </div>
+
+   `;
+
+   box.appendChild(row);
+
+  }
+ );
+
+
+ box
+  .querySelectorAll(
+   "[data-confirm-book]"
+  )
+  .forEach(
+   btn=>{
+
+    btn.onclick=()=>{
+
+     data.bookings[
+      Number(
+       btn.dataset.confirmBook
+      )
+     ].status=
+      "Confirmed";
+
+     saveData();
+
+     renderAdminBookings();
+
+     toast(
+      "Member confirmed"
+     );
+
+    };
+
+   }
+  );
+
+
+ box
+  .querySelectorAll(
+   "[data-cancel-book]"
+  )
+  .forEach(
+   btn=>{
+
+    btn.onclick=()=>{
+
+     data.bookings[
+      Number(
+       btn.dataset.cancelBook
+      )
+     ].status=
+      "Cancelled";
+
+     saveData();
+
+     renderAdminBookings();
+
+     toast(
+      "Member cancelled"
+     );
+
+    };
+
+   }
+  );
+
+
+ box
+  .querySelectorAll(
+   "[data-delete-book]"
+  )
+  .forEach(
+   btn=>{
+
+    btn.onclick=()=>{
+
+     data.bookings.splice(
+      Number(
+       btn.dataset.deleteBook
+      ),
+      1
+     );
+
+     saveData();
+
+     renderAdminBookings();
+
+     toast(
+      "Member request deleted"
+     );
+
+    };
+
+   }
+  );
+
+}
+
+
+/* =========================================================
+   SAVE EVERYTHING
+========================================================= */
+
+$("saveAll").onclick=()=>{
+
+ saveData();
+
+ renderSite();
+
+ populateAdmin();
+
+ toast(
+  "Everything saved"
+ );
+
+};
+
+
+/* =========================================================
+   BACKUP
+========================================================= */
+
+$("exportBtn").onclick=()=>{
+
+ const blob=
+  new Blob(
+   [
+    JSON.stringify(
+     data,
+     null,
+     2
+    )
+   ],
+   {
+    type:
+     "application/json"
+   }
+  );
+
+ const url=
+  URL.createObjectURL(
+   blob
+  );
+
+ const a=
+  document.createElement(
+   "a"
+  );
+
+ a.href=url;
+
+ a.download=
+  "sam-vini-backup.json";
+
+ document.body.appendChild(a);
+
+ a.click();
+
+ a.remove();
+
+ URL.revokeObjectURL(
+  url
+ );
+
+ toast(
+  "Backup exported"
+ );
+
+};
+
+
+$("importFile")
+ .addEventListener(
+  "change",
+  e=>{
+
+   const file=
+    e.target.files[0];
+
+   if(!file)return;
+
+   const reader=
+    new FileReader();
+
+   reader.onload=
+    event=>{
+
+     try{
+
+      const imported=
+       JSON.parse(
+        event.target.result
+       );
+
+      data=
+       merge(
+        defaultData,
+        imported
+       );
+
+
+      if(
+       !Array.isArray(
+        data.hero.images
+       )
+      ){
+
+       data.hero.images=
+        data.hero.image
+         ?[data.hero.image]
+         :[];
+
+      }
+
+
+      saveData();
+
+      renderSite();
+
+      populateAdmin();
+
+      toast(
+       "Backup imported"
+      );
+
+     }catch(error){
+
+      toast(
+       "Invalid backup file"
+      );
+
+     }
+
+    };
+
+   reader.readAsText(
+    file
+   );
+
+  }
+ );
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+$("resetBtn").onclick=()=>{
+
+ if(
+  !confirm(
+   "Reset SAM VINI website to default data?"
+  )
+ ){
+
+  return;
+
+ }
+
+ data=
+  clone(
+   defaultData
+  );
+
+ saveData();
+
+ renderSite();
+
+ populateAdmin();
+
+ toast(
+  "Website reset"
+ );
+
+};
+
+
+$("clearStorage").onclick=()=>{
+
+ if(
+  !confirm(
+   "Clear all SAM VINI local data?"
+  )
+ ){
+
+  return;
+
+ }
+
+ localStorage.removeItem(
+  STORAGE_KEY
+ );
+
+ data=
+  clone(
+   defaultData
+  );
+
+ renderSite();
+
+ populateAdmin();
+
+ toast(
+  "Local data cleared"
+ );
+
+};
+
+
+/* =========================================================
+   MOBILE ADMIN
+========================================================= */
+
+$("sideOpen").onclick=()=>{
+
+ $("sidebar")
+  .classList.add(
+   "mobile-open"
+  );
+
+};
+
+
+$("sideClose").onclick=()=>{
+
+ $("sidebar")
+  .classList.remove(
+   "mobile-open"
+  );
+
+};
+
+
+/* =========================================================
+   MOBILE SITE MENU
+========================================================= */
+
+$("mobileMenu").onclick=()=>{
+
+ const links=
+  $("navLinks");
+
+ if(
+  links.style.display==="flex"||
+  links.style.display==="block"
+ ){
+
+  links.style.display="";
+
+ }else{
+
+  links.style.display="flex";
+
+  links.style.position=
+   "absolute";
+
+  links.style.top="70px";
+
+  links.style.left="3%";
+
+  links.style.right="3%";
+
+  links.style.padding="18px";
+
+  links.style.border=
+   "1px solid var(--line)";
+
+  links.style.borderRadius=
+   "18px";
+
+  links.style.background=
+   "var(--bg2)";
+
+  links.style.flexDirection=
+   "column";
+
+ }
+
+};
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+$("previewBtn").onclick=()=>{
+
+ closeAdmin();
+
+ window.scrollTo({
+
+  top:0,
+
+  behavior:"smooth"
+
+ });
+
+ toast(
+  "Preview mode"
+ );
+
+};
+
+
+/* =========================================================
+   AGE GATE PETALS
+========================================================= */
+
+function createAgePetals(){
+
+ const box=
+  $("petals");
+
+ if(!box)return;
+
+ box.innerHTML="";
+
+ for(let i=0;i<22;i++){
+
+  const p=
+   document.createElement(
+    "span"
+   );
+
+  p.className=
+   "age-petal";
+
+  p.style.left=
+   Math.random()*100+"%";
+
+  p.style.animationDuration=
+   (7+Math.random()*9)+"s";
+
+  p.style.animationDelay=
+   (-Math.random()*12)+"s";
+
+  p.style.opacity=
+   (.07+Math.random()*.15);
+
+  p.style.transform=
+   `scale(${.6+Math.random()*.8})`;
+
+  box.appendChild(p);
+
+ }
+
+}
+
+
+/* =========================================================
+   AGE GATE
+========================================================= */
+
+$("enterSite").onclick=()=>{
+
+ $("ageGate").style.opacity=
+  "0";
+
+ $("ageGate").style.transition=
+  "opacity .8s ease";
+
+ setTimeout(
+  ()=>{
+
+   $("ageGate").style.display=
+    "none";
+
+  },
+  800
+ );
+
+ sessionStorage.setItem(
+  "SAM_VINI_ENTERED",
+  "1"
+ );
+
+};
+
+
+$("leaveSite").onclick=()=>{
+
+ window.location.href=
+  "about:blank";
+
+};
+
+
+if(
+ sessionStorage.getItem(
+  "SAM_VINI_ENTERED"
+ )==="1"
+ ){
+
+ $("ageGate").style.display=
+  "none";
+
+}
+
+
+/* =========================================================
+   LOADER
+========================================================= */
+
+function hideLoader(){
+
+ const loader=
+  $("loader");
+
+ if(!loader)return;
+
+ loader.classList.add(
+  "hide"
+ );
+
+}
+
+
+window.addEventListener(
+ "load",
+ ()=>{
+
+  setTimeout(
+   hideLoader,
+   1600
+  );
+
+ }
+);
+
+
+/* =========================================================
+   HERO PARALLAX START
+========================================================= */
+
+window.addEventListener(
+ "scroll",
+ ()=>{
+
+  /* CSS animation is handled
+     by requestAnimationFrame loop */
+
+ },
+ {
+  passive:true
+ }
+);
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+createAgePetals();
+
+applyBaseTheme();
+
+renderSite();
+
+if(
+ data.language==="hi"
+){
+
+ $("languageBtn").textContent=
+  "English";
+
+}else{
+
+ $("languageBtn").textContent=
+  "हिन्दी";
+
+}
+
+
+/* Start smooth hero parallax */
+
+requestAnimationFrame(
+ updateHeroParallax
+);
+
+</script>
+
+</body>
+</html>

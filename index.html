@@ -4550,7 +4550,22 @@ function merge(base,saved){
 }
 
 
-function loadData(){
+/* =========================================================
+   CLOUD DATA / SUPABASE SYNC
+   Supabase is the authoritative source for saved website data.
+   localStorage is kept only as a fast offline/cache fallback.
+========================================================= */
+
+const SUPABASE_SETTINGS_ID=1;
+const SUPABASE_BUCKET="sam-vini-media";
+const SAM_VINI_ADMIN_UID="b5199f36-cc11-4806-b581-5b22a28eca52";
+
+let cloudSaveQueue=Promise.resolve();
+let cloudHydrated=false;
+const storageObjectUrls=new Map();
+const storageRefByObjectUrl=new Map();
+
+function loadLocalData(){
 
  try{
 
@@ -4569,7 +4584,309 @@ function loadData(){
 }
 
 
-let data=loadData();
+let data=loadLocalData();
+
+
+function isStorageRef(value){
+ return typeof value==="string" && value.startsWith("storage://");
+}
+
+
+function storagePathFromRef(value){
+ return isStorageRef(value) ? value.slice("storage://".length) : "";
+}
+
+
+async function isAdminSession(){
+
+ try{
+  const {data:sessionData}=await supabaseClient.auth.getSession();
+  return !!(
+   sessionData &&
+   sessionData.session &&
+   sessionData.session.user &&
+   sessionData.session.user.id===SAM_VINI_ADMIN_UID
+  );
+ }catch(e){
+  return false;
+ }
+
+}
+
+
+async function uploadDataImage(dataUrl){
+
+ const blob=await fetch(dataUrl).then(r=>r.blob());
+ const ext=(blob.type||"image/jpeg").split("/")[1]||"jpeg";
+ const path=`admin/${Date.now()}-${Math.random().toString(36).slice(2,10)}.${ext}`;
+
+ const {error}=await supabaseClient
+  .storage
+  .from(SUPABASE_BUCKET)
+  .upload(path,blob,{
+   contentType:blob.type||"image/jpeg",
+   cacheControl:"31536000",
+   upsert:false
+  });
+
+ if(error) throw error;
+ return "storage://"+path;
+
+}
+
+
+async function prepareCloudValue(value){
+
+ if(typeof value==="string"){
+
+  if(value.startsWith("data:image/")){
+   return await uploadDataImage(value);
+  }
+
+  if(value.startsWith("blob:")){
+   const ref=storageRefByObjectUrl.get(value);
+   return ref || value;
+  }
+
+  return value;
+ }
+
+ if(Array.isArray(value)){
+  const out=[];
+  for(const item of value){
+   out.push(await prepareCloudValue(item));
+  }
+  return out;
+ }
+
+ if(value && typeof value==="object"){
+  const out={};
+  for(const [key,item] of Object.entries(value)){
+   out[key]=await prepareCloudValue(item);
+  }
+  return out;
+ }
+
+ return value;
+}
+
+
+async function hydrateCloudValue(value){
+
+ if(typeof value==="string" && isStorageRef(value)){
+
+  if(storageObjectUrls.has(value)){
+   return storageObjectUrls.get(value);
+  }
+
+  const path=storagePathFromRef(value);
+
+  const {data:file,error}=await supabaseClient
+   .storage
+   .from(SUPABASE_BUCKET)
+   .download(path);
+
+  if(error || !file){
+   console.warn("SAM VINI image load failed:",error);
+   return "";
+  }
+
+  const objectUrl=URL.createObjectURL(file);
+  storageObjectUrls.set(value,objectUrl);
+  storageRefByObjectUrl.set(objectUrl,value);
+  return objectUrl;
+ }
+
+ if(Array.isArray(value)){
+  const out=[];
+  for(const item of value){
+   out.push(await hydrateCloudValue(item));
+  }
+  return out;
+ }
+
+ if(value && typeof value==="object"){
+  const out={};
+  for(const [key,item] of Object.entries(value)){
+   out[key]=await hydrateCloudValue(item);
+  }
+  return out;
+ }
+
+ return value;
+}
+
+
+async function fetchCloudData(){
+
+ try{
+
+  const {data:row,error}=await supabaseClient
+   .from("sam_vini_settings")
+   .select("id,data,updated_at")
+   .eq("id",SUPABASE_SETTINGS_ID)
+   .maybeSingle();
+
+  if(error) throw error;
+  if(!row || !row.data) return null;
+
+  return merge(defaultData,row.data);
+
+ }catch(error){
+
+  console.warn("SAM VINI cloud load failed:",error);
+  return null;
+
+ }
+}
+
+
+async function syncFromCloud(){
+
+ const cloudData=await fetchCloudData();
+
+ if(!cloudData) return false;
+
+ try{
+  data=await hydrateCloudValue(cloudData);
+ }catch(error){
+  console.warn("SAM VINI image hydration failed:",error);
+  data=cloudData;
+ }
+
+ cloudHydrated=true;
+
+ try{
+  /* Cache the cloud representation, not temporary blob URLs. */
+  const cacheData=await prepareCloudCache(data);
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(cacheData));
+ }catch(e){}
+
+ renderSite();
+ applyBaseTheme();
+ if(typeof populateAdmin==="function" && document.querySelector("#admin.open")){
+  populateAdmin();
+ }
+ updateStorageInfo();
+ return true;
+}
+
+
+async function prepareCloudCache(value){
+
+ if(typeof value==="string"){
+  if(value.startsWith("blob:")){
+   return storageRefByObjectUrl.get(value)||"";
+  }
+  return value;
+ }
+
+ if(Array.isArray(value)){
+  const out=[];
+  for(const item of value) out.push(await prepareCloudCache(item));
+  return out;
+ }
+
+ if(value && typeof value==="object"){
+  const out={};
+  for(const [key,item] of Object.entries(value)){
+   out[key]=await prepareCloudCache(item);
+  }
+  return out;
+ }
+
+ return value;
+}
+
+
+function saveData(){
+
+ /* Always keep a local cache immediately. */
+ try{
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+ }catch(e){
+  /* Large photos are no longer required to live in localStorage. */
+ }
+
+ /* Only the authenticated Admin may write website settings. */
+ const snapshot=clone(data);
+
+ cloudSaveQueue=cloudSaveQueue.then(async()=>{
+
+  if(!(await isAdminSession())){
+   return;
+  }
+
+  try{
+
+   const cloudData=await prepareCloudValue(snapshot);
+
+   const {error}=await supabaseClient
+    .from("sam_vini_settings")
+    .upsert({
+     id:SUPABASE_SETTINGS_ID,
+     data:cloudData,
+     updated_at:new Date().toISOString()
+    },{onConflict:"id"});
+
+   if(error) throw error;
+
+   /* Keep the local cache in the same cloud format. */
+   try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(cloudData));
+   }catch(e){}
+
+  }catch(error){
+
+   console.error("SAM VINI cloud save failed:",error);
+   toast("Cloud save failed — check Supabase");
+
+  }
+
+ }).catch(error=>{
+  console.error("SAM VINI save queue error:",error);
+ });
+
+ return cloudSaveQueue;
+}
+
+
+async function migrateLocalDataToCloud(){
+
+ try{
+  const admin=await isAdminSession();
+  if(!admin) return false;
+
+  const existing=await fetchCloudData();
+  if(existing) return true;
+
+  const snapshot=clone(data);
+  const cloudData=await prepareCloudValue(snapshot);
+
+  const {error}=await supabaseClient
+   .from("sam_vini_settings")
+   .upsert({
+    id:SUPABASE_SETTINGS_ID,
+    data:cloudData,
+    updated_at:new Date().toISOString()
+   },{onConflict:"id"});
+
+  if(error) throw error;
+
+  try{
+   localStorage.setItem(STORAGE_KEY,JSON.stringify(cloudData));
+  }catch(e){}
+
+  return true;
+
+ }catch(error){
+  console.error("SAM VINI migration failed:",error);
+  return false;
+ }
+}
+
+
+/* Make sure old V6 data gets slideshow support */
 
 
 /* Make sure old V6 data gets slideshow support */
@@ -6340,13 +6657,13 @@ function observeReveals(){
    ADMIN
 ========================================================= */
 
-function openAdmin(){
+async function openAdmin(){
 
- if(
-  localStorage.getItem(
-   AUTH_KEY
-  )==="1"
- ){
+ const admin=await isAdminSession();
+
+ if(admin){
+
+  await syncFromCloud();
 
   $("admin").classList.add(
    "open"
@@ -6355,6 +6672,8 @@ function openAdmin(){
   populateAdmin();
 
  }else{
+
+  localStorage.removeItem(AUTH_KEY);
 
   $("loginModal").classList.add(
    "show"
@@ -6675,7 +6994,7 @@ $("loginBtn").onclick = async () => {
     return;
   }
 
-  const { data, error } =
+  const { data:authData, error } =
     await supabaseClient.auth.signInWithPassword({
       email: email,
       password: pass
@@ -6687,15 +7006,25 @@ $("loginBtn").onclick = async () => {
   }
 
   if (
-    data.user &&
-    data.user.id ===
-    "b5199f36-cc11-4806-b581-5b22a28eca52"
+    authData.user &&
+    authData.user.id ===
+    SAM_VINI_ADMIN_UID
   ) {
 
     localStorage.setItem(
       AUTH_KEY,
       "1"
     );
+
+    /* If this is the first cloud save, migrate the existing
+       device data once. Otherwise always use cloud as source. */
+    const cloudExists=await fetchCloudData();
+
+    if(!cloudExists){
+      await migrateLocalDataToCloud();
+    }
+
+    await syncFromCloud();
 
     $("loginModal")
       .classList.remove(
@@ -6710,12 +7039,13 @@ $("loginBtn").onclick = async () => {
     populateAdmin();
 
     toast(
-      "Admin access granted"
+      "Admin access granted — cloud data loaded"
     );
 
   } else {
 
     await supabaseClient.auth.signOut();
+    localStorage.removeItem(AUTH_KEY);
 
     toast(
       "Admin access denied"
@@ -8360,11 +8690,11 @@ $("importFile")
    RESET
 ========================================================= */
 
-$("resetBtn").onclick=()=>{
+$("resetBtn").onclick=async()=>{
 
  if(
   !confirm(
-   "Reset SAM VINI website to default data?"
+   "Reset SAM VINI website to default data in the cloud?"
   )
  ){
 
@@ -8372,29 +8702,34 @@ $("resetBtn").onclick=()=>{
 
  }
 
+ if(!(await isAdminSession())){
+  toast("Admin login required");
+  return;
+ }
+
  data=
   clone(
    defaultData
   );
 
- saveData();
+ await saveData();
 
  renderSite();
 
  populateAdmin();
 
  toast(
-  "Website reset"
+  "Website reset and saved to cloud"
  );
 
 };
 
 
-$("clearStorage").onclick=()=>{
+$("clearStorage").onclick=async()=>{
 
  if(
   !confirm(
-   "Clear all SAM VINI local data?"
+   "Clear this device cache and reload the latest cloud data?"
   )
  ){
 
@@ -8406,17 +8741,18 @@ $("clearStorage").onclick=()=>{
   STORAGE_KEY
  );
 
- data=
-  clone(
-   defaultData
-  );
+ const loaded=await syncFromCloud();
 
- renderSite();
-
- populateAdmin();
+ if(!loaded){
+  data=clone(defaultData);
+  renderSite();
+  populateAdmin();
+ }
 
  toast(
-  "Local data cleared"
+  loaded
+   ? "Local cache cleared — latest cloud data loaded"
+   : "Local cache cleared"
  );
 
 };
@@ -8684,6 +9020,31 @@ if(
   "हिन्दी";
 
 }
+
+
+/* =========================================================
+   CLOUD HYDRATION ON EVERY VISIT
+   Cloud data wins over any stale browser cache.
+========================================================= */
+
+(async()=>{
+
+ try{
+
+  const loaded=await syncFromCloud();
+
+  if(!loaded && await isAdminSession()){
+   const migrated=await migrateLocalDataToCloud();
+   if(migrated){
+    await syncFromCloud();
+   }
+  }
+
+ }catch(error){
+  console.warn("SAM VINI startup cloud sync failed:",error);
+ }
+
+})();
 
 
 /* Start smooth hero parallax */

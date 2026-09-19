@@ -1704,6 +1704,16 @@ footer{
  }
 }
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+const SUPABASE_URL = "https://bcqmplulfjpeilwyepda.supabase.co";
+const SUPABASE_KEY = "YOUR_PUBLISHABLE_KEY";
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+  </script>
 </head>
 
 <body>
@@ -6649,51 +6659,69 @@ $("loginClose").onclick=()=>{
 
 };
 
+$("loginBtn").onclick = async () => {
 
-$("loginBtn").onclick=()=>{
+  const email =
+    $("loginEmail")
+      .value
+      .trim();
 
- const email=
-  $("loginEmail")
-   .value
-   .trim();
+  const pass =
+    $("loginPassword")
+      .value;
 
- const pass=
-  $("loginPassword")
-   .value;
+  if (!email || !pass) {
+    toast("Email and password required");
+    return;
+  }
 
- if(
-  email==="admin@samvini.com" &&
-  pass==="SAMVINI2026"
- ){
+  const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: pass
+    });
 
-  localStorage.setItem(
-   AUTH_KEY,
-   "1"
-  );
+  if (error) {
+    toast("Incorrect email or password");
+    return;
+  }
 
-  $("loginModal")
-   .classList.remove(
-    "show"
-   );
+  if (
+    data.user &&
+    data.user.id ===
+    "b5199f36-cc11-4806-b581-5b22a28eca52"
+  ) {
 
-  $("admin")
-   .classList.add(
-    "open"
-   );
+    localStorage.setItem(
+      AUTH_KEY,
+      "1"
+    );
 
-  populateAdmin();
+    $("loginModal")
+      .classList.remove(
+        "show"
+      );
 
-  toast(
-   "Admin access granted"
-  );
+    $("admin")
+      .classList.add(
+        "open"
+      );
 
- }else{
+    populateAdmin();
 
-  toast(
-   "Incorrect email or password"
-  );
+    toast(
+      "Admin access granted"
+    );
 
- }
+  } else {
+
+    await supabaseClient.auth.signOut();
+
+    toast(
+      "Admin access denied"
+    );
+
+  }
 
 };
 

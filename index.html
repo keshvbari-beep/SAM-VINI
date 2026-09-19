@@ -4017,10 +4017,8 @@ const supabaseClient = supabase.createClient(
       class="muted"
       style="line-height:1.8;margin-top:10px"
      >
-      Photos, member requests and settings are stored in this
-      browser's localStorage. They are not automatically uploaded
-      to a cloud database. For a real multi-device admin system,
-      a backend such as Firebase or Supabase would be required.
+      Photos, member requests and settings are stored in the secure Supabase cloud database and storage.
+      Admin changes are shared across devices for all visitors.
      </p>
 
     </div>
@@ -4552,8 +4550,8 @@ function merge(base,saved){
 
 /* =========================================================
    CLOUD DATA / SUPABASE SYNC
-   Supabase is the authoritative source for saved website data.
-   localStorage is kept only as a fast offline/cache fallback.
+   Supabase is the ONLY authoritative source for saved website data.
+   Website content is never stored in localStorage.
 ========================================================= */
 
 const SUPABASE_SETTINGS_ID=1;
@@ -4566,21 +4564,9 @@ const storageObjectUrls=new Map();
 const storageRefByObjectUrl=new Map();
 
 function loadLocalData(){
-
- try{
-
-  const raw=localStorage.getItem(STORAGE_KEY);
-
-  return raw
-   ? merge(defaultData,JSON.parse(raw))
-   : clone(defaultData);
-
- }catch(e){
-
+  /* Website content is cloud-only.
+     Never read saved website data from this device. */
   return clone(defaultData);
-
- }
-
 }
 
 
@@ -4756,12 +4742,6 @@ async function syncFromCloud(){
 
  cloudHydrated=true;
 
- try{
-  /* Cache the cloud representation, not temporary blob URLs. */
-  const cacheData=await prepareCloudCache(data);
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(cacheData));
- }catch(e){}
-
  renderSite();
  applyBaseTheme();
  if(typeof populateAdmin==="function" && document.querySelector("#admin.open")){
@@ -4801,14 +4781,8 @@ async function prepareCloudCache(value){
 
 function saveData(){
 
- /* Always keep a local cache immediately. */
- try{
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
- }catch(e){
-  /* Large photos are no longer required to live in localStorage. */
- }
-
- /* Only the authenticated Admin may write website settings. */
+ /* Only the authenticated Admin may write website settings.
+    Website content is never persisted to localStorage. */
  const snapshot=clone(data);
 
  cloudSaveQueue=cloudSaveQueue.then(async()=>{
@@ -4830,11 +4804,6 @@ function saveData(){
     },{onConflict:"id"});
 
    if(error) throw error;
-
-   /* Keep the local cache in the same cloud format. */
-   try{
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(cloudData));
-   }catch(e){}
 
   }catch(error){
 
@@ -4873,10 +4842,7 @@ async function migrateLocalDataToCloud(){
 
   if(error) throw error;
 
-  try{
-   localStorage.setItem(STORAGE_KEY,JSON.stringify(cloudData));
-  }catch(e){}
-
+  /* Cloud is now authoritative; do not cache website content locally. */
   return true;
 
  }catch(error){
@@ -4908,26 +4874,9 @@ if(!Array.isArray(data.hero.images)){
 
 /* =========================================================
    SAVE
+   The cloud saveData() above is the single save implementation.
+   This duplicate localStorage-only saver was intentionally removed.
 ========================================================= */
-
-function saveData(){
-
- try{
-
-  localStorage.setItem(
-   STORAGE_KEY,
-   JSON.stringify(data)
-  );
-
- }catch(e){
-
-  toast(
-   "Storage full — try smaller photos"
-  );
-
- }
-
-}
 
 
 /* =========================================================
@@ -6673,8 +6622,6 @@ async function openAdmin(){
 
  }else{
 
-  localStorage.removeItem(AUTH_KEY);
-
   $("loginModal").classList.add(
    "show"
   );
@@ -6878,14 +6825,7 @@ function updateStorageInfo(){
  let bytes=0;
 
  try{
-
-  bytes=
-   new Blob([
-    localStorage.getItem(
-     STORAGE_KEY
-    )||""
-   ]).size;
-
+  bytes=0;
  }catch(e){}
 
  const kb=
@@ -7011,11 +6951,6 @@ $("loginBtn").onclick = async () => {
     SAM_VINI_ADMIN_UID
   ) {
 
-    localStorage.setItem(
-      AUTH_KEY,
-      "1"
-    );
-
     /* If this is the first cloud save, migrate the existing
        device data once. Otherwise always use cloud as source. */
     const cloudExists=await fetchCloudData();
@@ -7045,8 +6980,6 @@ $("loginBtn").onclick = async () => {
   } else {
 
     await supabaseClient.auth.signOut();
-    localStorage.removeItem(AUTH_KEY);
-
     toast(
       "Admin access denied"
     );
@@ -8737,10 +8670,6 @@ $("clearStorage").onclick=async()=>{
 
  }
 
- localStorage.removeItem(
-  STORAGE_KEY
- );
-
  const loaded=await syncFromCloud();
 
  if(!loaded){
@@ -9033,12 +8962,9 @@ if(
 
   const loaded=await syncFromCloud();
 
-  if(!loaded && await isAdminSession()){
-   const migrated=await migrateLocalDataToCloud();
-   if(migrated){
-    await syncFromCloud();
-   }
-  }
+  /* If no cloud record exists, leave defaultData in memory.
+     Admin login can perform the one-time migration of an existing
+     legacy device record; all normal website reads are cloud-only. */
 
  }catch(error){
   console.warn("SAM VINI startup cloud sync failed:",error);
